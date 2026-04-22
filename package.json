@@ -1,0 +1,30 @@
+{
+  "name": "theos-fight",
+  "version": "1.0.0",
+  "description": "Charity",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andy-Hutton/theos-fight.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Andy-Hutton/theos-fight/issues"
+  },
+  "homepage": "https://github.com/Andy-Hutton/theos-fight#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
+    "anthropic": "^0.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
+    "xss": "^1.0.15"
+  }
+}

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theo's Fight - Grant Finder for Families</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #e0f4fd;
+    --sky-mid: #b8e4f7;
+    --sky-deep: #7cc8ef;
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --navy: #0d3d5e;
+    --white: #ffffff;
+    --soft: #f4fafd;
+    --text: #1a3a4f;
+    --muted: #5a8fa8;
+    --accent: #f9a826;
+    --red: #e03b1f;
+    --success: #2ecc71;
+    --card-shadow: 0 4px 24px rgba(42,159,214,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--soft);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 60%, var(--blue) 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(124,200,239,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 24px 0;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+  }
+
+  .header-content {
+    flex: 1;
+    padding-bottom: 44px;
+  }
+
+  .header-monkey {
+    flex-shrink: 0;
+    width: 220px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .header-monkey img {
+    width: 210px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3));
+    animation: monkeyFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes monkeyFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @media(max-width: 640px) {
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    .header-monkey { width: 100%; justify-content: flex-end; order: -1; padding-top: 8px; }
+    .header-monkey img { width: 130px; }
+    .header-content { padding-bottom: 32px; }
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .logo-text {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .logo-text .fight { color: var(--sky-deep); }
+
+  .tagline {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 14px;
+  }
+
+  .header-headline {
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.28;
+    max-width: 560px;
+    margin-bottom: 10px;
+  }
+
+  .header-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.70);
+    max-width: 500px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .header-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.88);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  /* EMPATHY STRIP */
+  .empathy-strip {
+    background: var(--white);
+    border-bottom: 2px solid var(--sky-mid);
+  }
+
+  .empathy-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 24px;
+  }
+
+  .empathy-quote {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--navy);
+    line-height: 1.65;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 10px;
+    position: relative;
+    padding: 0 20px;
+  }
+
+  .empathy-quote::before {
+    content: '"';
+    font-size: 4rem;
+    color: var(--sky-deep);
+    font-family: 'Lora', serif;
+    line-height: 0;
+    position: absolute;
+    top: 18px;
+    left: -8px;
+    opacity: 0.6;
+  }
+
+  .empathy-attr {
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 32px;
+  }
+
+  .empathy-attr span {
+    color: var(--blue);
+  }
+
+  .empathy-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  @media(max-width: 560px) {
+    .empathy-pillars { grid-template-columns: 1fr; }
+  }
+
+  .pillar {
+    background: var(--soft);
+    border: 2px solid var(--sky-mid);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .pillar:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow);
+  }
+
+  .pillar-before {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .pillar-problem {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pillar-arrow {
+    font-size: 1.2rem;
+    color: var(--sky-deep);
+    margin: 6px 0;
+  }
+
+  .pillar-after {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .pillar-solution {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* STEPS */
+  .steps-bar { background: var(--white); border-bottom: 2px solid var(--sky-mid); }
+
+  .steps-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 24px;
+  }
+
+  .step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .step.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .step.done { color: var(--success); border-bottom-color: var(--success); }
+
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: currentColor;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .step.active .step-num { background: var(--blue); }
+  .step.done .step-num { background: var(--success); }
+  .step-label { display: none; }
+  @media(min-width: 480px) { .step-label { display: block; } }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 36px 24px 60px; }
+
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    padding: 36px 32px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 26px; line-height: 1.55; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  @media(max-width: 560px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .card { padding: 24px 18px; }
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  label .required { color: var(--red); margin-left: 2px; }
+
+  input, select, textarea {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--sky);
+    border: 2px solid var(--sky-mid);
+    border-radius: 10px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(42,159,214,0.12);
+    background: var(--white);
+  }
+
+  textarea { resize: vertical; min-height: 88px; }
+
+  .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+  @media(max-width: 480px) { .checkbox-group { grid-template-columns: 1fr; } }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sky);
+    border: 2px solid var(--sky-mid);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    user-select: none;
+  }
+
+  .checkbox-item:hover { border-color: var(--sky-deep); background: var(--sky-mid); }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--blue);
+    margin: 0; padding: 0;
+    background: none; border: none;
+    flex-shrink: 0;
+  }
+
+  .checkbox-item.checked { border-color: var(--blue); background: rgba(42,159,214,0.08); color: var(--blue-dark); }
+
+  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  .submit-area { margin-top: 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--red) 0%, #c0321a 100%);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(224,59,31,0.30);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(224,59,31,0.38); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .privacy-note { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+
+  /* LOADING */
+  .loading-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    padding: 48px 32px;
+    text-align: center;
+    display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .loading-card.visible { display: block; }
+
+  .loading-monkey {
+    width: 90px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+    animation: monkeyFloat 1.5s ease-in-out infinite;
+  }
+
+  .loading-title { font-size: 1.2rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+
+  .loading-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 340px;
+    margin: 20px auto 0;
+    text-align: left;
+  }
+
+  .loading-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+
+  .loading-step.active { background: rgba(42,159,214,0.08); color: var(--blue-dark); font-weight: 700; }
+  .loading-step.complete { color: var(--success); font-weight: 700; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  /* RESULTS */
+  .results-section { display: none; animation: fadeUp 0.4s ease both; }
+  .results-section.visible { display: block; }
+
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .results-title { font-size: 1.3rem; font-weight: 800; color: var(--navy); }
+
+  .results-count {
+    background: var(--red);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .grant-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    border-left: 5px solid var(--blue);
+    padding: 24px 24px 20px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.4s ease both;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .grant-card:hover { box-shadow: 0 8px 32px rgba(42,159,214,0.16); transform: translateY(-2px); }
+
+  .grant-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .grant-name { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
+
+  .grant-amount {
+    background: var(--sky);
+    border: 2px solid var(--sky-mid);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    white-space: nowrap;
+  }
+
+  .grant-org { font-size: 0.82rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+  .grant-desc { font-size: 0.88rem; color: var(--text); line-height: 1.55; margin-bottom: 14px; }
+  .grant-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+
+  .tag { background: var(--sky); color: var(--blue-dark); font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; }
+
+  .eligibility-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .eligibility-label { font-size: 0.75rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .eligibility-track { flex: 1; height: 6px; background: var(--sky-mid); border-radius: 3px; overflow: hidden; }
+  .eligibility-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--sky-deep), var(--blue)); transition: width 1s ease; }
+  .eligibility-pct { font-size: 0.78rem; font-weight: 800; color: var(--blue-dark); white-space: nowrap; }
+
+  .grant-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .btn-apply {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--red) 0%, #c0321a 100%);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(224,59,31,0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-apply:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(224,59,31,0.32); }
+  .btn-apply:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--blue);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 9px 20px;
+    border: 2px solid var(--blue);
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .btn-outline:hover { background: var(--sky); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,61,94,0.55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+
+  .modal-overlay.visible { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 20px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(13,61,94,0.25);
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .modal-header {
+    background: linear-gradient(135deg, var(--navy), var(--blue-dark));
+    padding: 22px 28px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title { font-size: 1rem; font-weight: 800; color: white; }
+
+  .modal-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .modal-body { padding: 28px; }
+  .draft-label { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 8px; }
+
+  .draft-text {
+    background: var(--sky);
+    border: 2px solid var(--sky-mid);
+    border-radius: 12px;
+    padding: 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+    min-height: 100px;
+  }
+
+  .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .error-msg {
+    background: #ffeaea;
+    border: 2px solid #ffb3b3;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #c0392b;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-top: 16px;
+    display: none;
+  }
+
+  .error-msg.visible { display: block; }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 28px 24px;
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-monkey { width: 48px; height: auto; opacity: 0.85; }
+  footer strong { color: rgba(255,255,255,0.88); }
+  .heart { color: #e74c7c; }
+  footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  footer a:hover { color: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-content">
+      <div class="logo-row">
+        <div class="logo-text">Theo's <span class="fight">Fight</span></div>
+      </div>
+      <p class="tagline">Because every child deserves the equipment they need</p>
+      <h1 class="header-headline">Find financial grants for your child's specialist equipment</h1>
+      <p class="header-sub">Tell us about your child and what they need. We'll search hundreds of UK charities, funds, and trusts — then help you apply. Completely free.</p>
+      <div class="header-badges">
+        <span class="header-badge">🇬🇧 UK families only</span>
+        <span class="header-badge">👧 Under 18s</span>
+        <span class="header-badge">💙 100% free to use</span>
+      </div>
+    </div>
+    <div class="header-monkey">
+      <img src="/monkey.png" alt="Theo's Fight mascot" />
+    </div>
+  </div>
+</header>
+
+<!-- EMPATHY STRIP -->
+<div class="empathy-strip">
+  <div class="empathy-inner">
+    <p class="empathy-quote">When starting out on our family's journey, every step was into the unknown. Appointments, diagnosis, equipment, time frames and costs are all causes of stress. Let us help take a little bit of that pressure away.</p>
+    <p class="empathy-attr">— Andy, <span>Theo's dad &amp; founder of Theo's Fight</span></p>
+
+    <div class="empathy-pillars">
+      <div class="pillar">
+        <div class="pillar-before">The reality</div>
+        <div class="pillar-problem">📞 Endless phone calls</div>
+        <div class="pillar-arrow">↓</div>
+        <div class="pillar-after">What we do</div>
+        <div class="pillar-solution">✅ One simple form</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-before">The reality</div>
+        <div class="pillar-problem">🔍 Hours searching for grants</div>
+        <div class="pillar-arrow">↓</div>
+        <div class="pillar-after">What we do</div>
+        <div class="pillar-solution">✅ We find them for you</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-before">The reality</div>
+        <div class="pillar-problem">📋 Pages of paperwork</div>
+        <div class="pillar-arrow">↓</div>
+        <div class="pillar-after">What we do</div>
+        <div class="pillar-solution">✅ We draft it for you</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="steps-bar">
+  <div class="steps-inner">
+    <div class="step active" id="step1"><div class="step-num">1</div><span class="step-label">Your Details</span></div>
+    <div class="step" id="step2"><div class="step-num">2</div><span class="step-label">Searching Grants</span></div>
+    <div class="step" id="step3"><div class="step-num">3</div><span class="step-label">Your Results</span></div>
+    <div class="step" id="step4"><div class="step-num">4</div><span class="step-label">Apply</span></div>
+  </div>
+</div>
+
+<main>
+
+  <div class="card" id="formCard">
+    <div class="card-title">👧 About your child</div>
+    <p class="card-desc">We'll use these details to match you with grants you're actually eligible for. We never share your information.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Child's first name <span class="required">*</span></label>
+        <input type="text" id="childName" placeholder="e.g. Theo" />
+      </div>
+      <div class="form-group">
+        <label>Child's age <span class="required">*</span></label>
+        <select id="childAge">
+          <option value="">Select age</option>
+          <option>Under 1</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option>
+          <option>9</option><option>10</option><option>11</option><option>12</option>
+          <option>13</option><option>14</option><option>15</option><option>16</option>
+          <option>17</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Diagnosis / condition <span class="required">*</span></label>
+        <input type="text" id="diagnosis" placeholder="e.g. Cerebral Palsy, Muscular Dystrophy, Autism..." />
+        <span class="hint">Enter as much or as little as you're comfortable sharing</span>
+      </div>
+      <div class="form-group full">
+        <label>Your location <span class="required">*</span></label>
+        <input type="text" id="location" placeholder="Town, city or postcode e.g. Liverpool or L1 1AA" />
+        <span class="hint">Used to find local authority and regional funds</span>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="card-title" style="margin-bottom:6px;">🦽 Equipment needed</div>
+      <p class="card-desc">Select all that apply</p>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" value="wheelchair" onchange="toggleCheck(this)"> 🦽 Wheelchair / mobility aid</label>
+        <label class="checkbox-item"><input type="checkbox" value="comms" onchange="toggleCheck(this)"> 🗣️ Communication device (AAC)</label>
+        <label class="checkbox-item"><input type="checkbox" value="sensory" onchange="toggleCheck(this)"> 🌈 Sensory equipment</label>
+        <label class="checkbox-item"><input type="checkbox" value="standing" onchange="toggleCheck(this)"> 🧍 Standing frame / postural</label>
+        <label class="checkbox-item"><input type="checkbox" value="orthotics" onchange="toggleCheck(this)"> 🦿 Splints / orthotics</label>
+        <label class="checkbox-item"><input type="checkbox" value="other" onchange="toggleCheck(this)"> ➕ Other specialist equipment</label>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;" class="form-group">
+      <label>Any additional context? <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <textarea id="context" placeholder="e.g. NHS has assessed Theo but there's a 14-month wait, we need a wheelchair urgently"></textarea>
+    </div>
+
+    <div class="error-msg" id="formError">Please fill in your child's name, age, diagnosis and location before searching.</div>
+
+    <div class="submit-area">
+      <button class="btn-primary" onclick="startSearch()" id="searchBtn">🔍 Search for Grants</button>
+      <span class="privacy-note">🔒 Your details are private and never stored or shared</span>
+    </div>
+  </div>
+
+  <div class="loading-card" id="loadingCard">
+    <img src="/monkey.png" alt="Searching..." class="loading-monkey" />
+    <div class="loading-title">Searching for grants for <span id="loadingName">your child</span>...</div>
+    <p style="font-size:0.88rem;color:var(--muted);">This usually takes around 15-20 seconds</p>
+    <ul class="loading-steps">
+      <li class="loading-step active" id="ls1"><div class="step-dot"></div> Searching UK charity databases</li>
+      <li class="loading-step" id="ls2"><div class="step-dot"></div> Checking Family Fund and Newlife criteria</li>
+      <li class="loading-step" id="ls3"><div class="step-dot"></div> Looking up local authority funds</li>
+      <li class="loading-step" id="ls4"><div class="step-dot"></div> Scoring eligibility matches</li>
+      <li class="loading-step" id="ls5"><div class="step-dot"></div> Preparing your results</li>
+    </ul>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title" id="resultsTitle">Grants found for your child</div>
+      <div class="results-count" id="resultsCount">0 matches</div>
+    </div>
+    <div id="grantsContainer"></div>
+    <div style="margin-top:28px;padding:20px 24px;background:var(--sky);border-radius:14px;border:2px solid var(--sky-mid);">
+      <p style="font-size:0.88rem;color:var(--navy);font-weight:700;">💡 <strong>Tip:</strong> You can apply to multiple grants at the same time — most organisations are aware families do this and it is completely acceptable. Click "Draft My Application" on each one above.</p>
+    </div>
+  </div>
+
+</main>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✍️ Application Draft - <span id="modalGrantName"></span></div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="draft-label">Your personalised application letter</div>
+      <div class="draft-text" id="draftText">Generating your letter...</div>
+      <div class="modal-actions">
+        <button class="btn-apply" id="copyBtn" onclick="copyDraft()">📋 Copy to Clipboard</button>
+        <button class="btn-outline" onclick="closeModalDirect()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <img src="/monkey.png" alt="" class="footer-monkey" />
+    <div>
+      <strong>Theo's Fight</strong> — Built with love to help families access the equipment their children deserve.<br>
+      Free to use, always &nbsp;·&nbsp; Made in the UK <span class="heart">♥</span> &nbsp;·&nbsp;
+      <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  let formData = {};
+  let grantsList = [];
+
+  function toggleCheck(el) {
+    const label = el.closest('.checkbox-item');
+    if (el.checked) label.classList.add('checked');
+    else label.classList.remove('checked');
+  }
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const s = document.getElementById('step' + i);
+      s.classList.remove('active', 'done');
+      if (i < n) s.classList.add('done');
+      else if (i === n) s.classList.add('active');
+    }
+  }
+
+  function getSelectedEquipment() {
+    return Array.from(document.querySelectorAll('.checkbox-item input:checked')).map(el => el.value);
+  }
+
+  function validateForm() {
+    const name = document.getElementById('childName').value.trim();
+    const age = document.getElementById('childAge').value;
+    const diagnosis = document.getElementById('diagnosis').value.trim();
+    const location = document.getElementById('location').value.trim();
+    return name && age && diagnosis && location;
+  }
+
+  async function startSearch() {
+    if (!validateForm()) {
+      document.getElementById('formError').classList.add('visible');
+      return;
+    }
+
+    document.getElementById('formError').classList.remove('visible');
+
+    formData = {
+      childName: document.getElementById('childName').value.trim(),
+      childAge: document.getElementById('childAge').value,
+      diagnosis: document.getElementById('diagnosis').value.trim(),
+      location: document.getElementById('location').value.trim(),
+      equipment: getSelectedEquipment(),
+      context: document.getElementById('context').value.trim()
+    };
+
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('loadingCard').classList.add('visible');
+    document.getElementById('loadingName').textContent = formData.childName;
+    setStep(2);
+
+    const loadingSteps = ['ls1','ls2','ls3','ls4','ls5'];
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i > 0) {
+        const prev = document.getElementById(loadingSteps[i-1]);
+        prev.classList.remove('active');
+        prev.classList.add('complete');
+        prev.innerHTML = '✅ ' + prev.textContent.trim();
+      }
+      if (i < loadingSteps.length) {
+        document.getElementById(loadingSteps[i]).classList.add('active');
+        i++;
+      }
+    }, 800);
+
+    try {
+      const response = await fetch('/search-grants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+      clearInterval(interval);
+
+      if (data.success && data.grants) {
+        grantsList = data.grants;
+        showResults(data.grants);
+      } else {
+        showError();
+      }
+    } catch (err) {
+      clearInterval(interval);
+      showError();
+    }
+  }
+
+  function showResults(grants) {
+    document.getElementById('loadingCard').classList.remove('visible');
+    document.getElementById('resultsTitle').textContent = 'Grants found for ' + formData.childName;
+    document.getElementById('resultsCount').textContent = grants.length + ' matches';
+
+    const container = document.getElementById('grantsContainer');
+    container.innerHTML = '';
+
+    const borderColors = ['#e03b1f', '#2a9fd6', '#f9a826', '#2ecc71', '#6bb8d4'];
+
+    grants.forEach((grant, idx) => {
+      const card = document.createElement('div');
+      card.className = 'grant-card';
+      card.style.borderLeftColor = borderColors[idx % borderColors.length];
+      card.style.animationDelay = (idx * 0.08) + 's';
+
+      const eligibility = grant.eligibility || 80;
+      const tags = (grant.tags || []).map(t => '<span class="tag">' + t + '</span>').join('');
+
+      card.innerHTML = `
+        <div class="grant-top">
+          <div class="grant-name">${grant.name}</div>
+          <div class="grant-amount">${grant.amount}</div>
+        </div>
+        <div class="grant-org">${grant.organisation}</div>
+        <div class="eligibility-bar">
+          <span class="eligibility-label">Eligibility match</span>
+          <div class="eligibility-track"><div class="eligibility-fill" style="width:0%" data-width="${eligibility}%"></div></div>
+          <span class="eligibility-pct">${eligibility}%</span>
+        </div>
+        <p class="grant-desc">${grant.description}</p>
+        <div class="grant-tags">${tags}</div>
+        <div class="grant-actions">
+          <button class="btn-apply" onclick="openDraft(${idx})">✍️ Draft My Application</button>
+          <a class="btn-outline" href="${grant.url}" target="_blank" rel="noopener">🔗 View Grant</a>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    document.getElementById('resultsSection').classList.add('visible');
+    setStep(3);
+
+    setTimeout(() => {
+      document.querySelectorAll('.eligibility-fill').forEach(el => {
+        el.style.width = el.getAttribute('data-width');
+      });
+    }, 200);
+  }
+
+  function showError() {
+    document.getElementById('loadingCard').classList.remove('visible');
+    document.getElementById('formCard').style.display = 'block';
+    const err = document.getElementById('formError');
+    err.textContent = 'Something went wrong with the search. Please try again.';
+    err.classList.add('visible');
+    setStep(1);
+  }
+
+  async function openDraft(grantIndex) {
+    const grant = grantsList[grantIndex];
+    document.getElementById('modalGrantName').textContent = grant.name;
+    document.getElementById('draftText').textContent = 'Generating your personalised letter...';
+    document.getElementById('modalOverlay').classList.add('visible');
+    document.getElementById('copyBtn').textContent = '📋 Copy to Clipboard';
+    setStep(4);
+
+    try {
+      const response = await fetch('/draft-application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          grantName: grant.name,
+          organisation: grant.organisation
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        document.getElementById('draftText').textContent = data.draft;
+      } else {
+        document.getElementById('draftText').textContent = 'Sorry, we could not generate a letter right now. Please try again.';
+      }
+    } catch (err) {
+      document.getElementById('draftText').textContent = 'Sorry, something went wrong. Please try again.';
+    }
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modalOverlay').classList.remove('visible');
+  }
+
+  function copyDraft() {
+    const text = document.getElementById('draftText').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
+    });
+  }
+</script>
+</body>
+</html>
