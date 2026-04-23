@@ -5,7 +5,6 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss');
 require('dotenv').config();
-
 const app = express();
 const client = new Anthropic();
 
@@ -76,7 +75,7 @@ app.post('/search-grants', searchLimiter, async (req, res) => {
       max_tokens: 2000,
       messages: [{
         role: 'user',
-        content: `You are a UK grant specialist helping families with disabled children find financial support for specialist equipment. Search for real UK grants for this family. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}. Additional context: ${context || 'None provided'}. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Organisation name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description", "tags": ["tag1", "tag2"], "url": "https://real-url.org"}]`
+        content: `You are a UK grant specialist helping families with disabled children find financial support for specialist equipment. Search for real UK grants for this family. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}. Additional context: ${context || 'None provided'}. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Organisation name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "applications@example.org"}]`
       }]
     });
 
@@ -111,7 +110,7 @@ const childDescription = sanitiseText(req.body.childDescription, 600);
       max_tokens: 1000,
       messages: [{
         role: 'user',
-       content: `Write a heartfelt professional grant application letter for a UK family. Grant: ${grantName} by ${organisation}. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}.About this child in the family's own words: ${childDescription || 'Not provided'}. IMPORTANT: Base all descriptions of the child entirely on what the family has told you above. Never assume abilities, emotions, or behaviours that have not been mentioned. If no description was provided, describe only the factual details given. Write a complete ready-to-send letter, warm and compelling. Use [PARENT NAME] as placeholder for parent name.`
+       content: `Write a heartfelt professional grant application letter for a UK family. Grant: ${grantName} by ${organisation}. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}.About this child in the family's own words: ${childDescription || 'Not provided'}. IMPORTANT: Base all descriptions of the child entirely on what the family has told you above. Never assume abilities, emotions, or behaviours that have not been mentioned. If no description was provided, describe only the factual details given. Write a complete ready-to-send letter, warm and compelling. Use [PARENT NAME] as placeholder for parent name. Do not use any markdown formatting, asterisks, bold, or special characters in the letter. Plain text only..`
       }]
     });
 

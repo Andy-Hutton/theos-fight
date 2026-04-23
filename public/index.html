@@ -868,6 +868,11 @@
         <span class="hint">Enter as much or as little as you're comfortable sharing</span>
       </div>
       <div class="form-group full">
+        <label>Tell us about your child <span style="font-weight:400;color:var(--muted)">(optional but really helps)</span></label>
+        <textarea id="childDescription" placeholder="e.g. Theo is a happy 8 year old who loves music. He communicates using an eye gaze device and understands everything said to him. He cannot walk independently and uses a manual wheelchair which he is rapidly outgrowing..." style="min-height:110px;"></textarea>
+        <span class="hint">Tell us about their personality, how they communicate, what they enjoy, and what this equipment would mean for their daily life. We'll use your own words in the application letter — never assumptions.</span>
+      </div>
+      <div class="form-group full">
         <label>Your location <span class="required">*</span></label>
         <input type="text" id="location" placeholder="Town, city or postcode e.g. Liverpool or L1 1AA" />
         <span class="hint">Used to find local authority and regional funds</span>
@@ -933,7 +938,8 @@
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="draft-label">Your personalised application letter</div>
+      <div id="draftEmail" style="display:none;"></div>
+<div class="draft-label">Your personalised application letter</div>
       <div class="draft-text" id="draftText">Generating your letter...</div>
       <div class="modal-actions">
         <button class="btn-apply" id="copyBtn" onclick="copyDraft()">📋 Copy to Clipboard</button>
@@ -999,6 +1005,7 @@
       diagnosis: document.getElementById('diagnosis').value.trim(),
       location: document.getElementById('location').value.trim(),
       equipment: getSelectedEquipment(),
+      childDescription: document.getElementById('childDescription').value.trim(),
       context: document.getElementById('context').value.trim()
     };
 
@@ -1106,9 +1113,22 @@
   async function openDraft(grantIndex) {
     const grant = grantsList[grantIndex];
     document.getElementById('modalGrantName').textContent = grant.name;
-    document.getElementById('draftText').textContent = 'Generating your personalised letter...';
+    document.getElementById('draftText').textContent = 'Generating your personalised letter... this may take a moment. Your letter will appear here shortly.';
     document.getElementById('modalOverlay').classList.add('visible');
     document.getElementById('copyBtn').textContent = '📋 Copy to Clipboard';
+const email = grant.email || '';
+const emailSection = document.getElementById('draftEmail');
+if (email) {
+  emailSection.innerHTML = `
+    <div style="background:var(--sky);border:2px solid var(--sky-mid);border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:6px;">📧 Application Email Address</div>
+      <div style="font-size:0.95rem;font-weight:800;color:var(--navy);">${email}</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:6px;">⚠️ Please verify this email address on the organisation's website before sending — contact details can change.</div>
+    </div>`;
+  emailSection.style.display = 'block';
+} else {
+  emailSection.style.display = 'none';
+}
     setStep(4);
 
     try {
