@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - Theo's Fight</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #e0f4fd;
+    --sky-mid: #b8e4f7;
+    --sky-deep: #7cc8ef;
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --navy: #0d3d5e;
+    --white: #ffffff;
+    --soft: #f4fafd;
+    --text: #1a3a4f;
+    --muted: #5a8fa8;
+    --red: #e03b1f;
+    --card-shadow: 0 4px 24px rgba(42,159,214,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--soft);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 60%, var(--blue) 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(124,200,239,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  .logo-monkey {
+    width: 44px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+
+  .logo-text {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: white;
+  }
+
+  .logo-text span { color: #7cc8ef; }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .page-hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 100%);
+    padding: 48px 24px 56px;
+    text-align: center;
+    position: relative;
+  }
+
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 40px;
+    background: var(--soft);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    color: white;
+    margin-bottom: 12px;
+  }
+
+  .page-hero p {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.75);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    padding: 40px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media(max-width: 560px) { .card { padding: 24px 20px; } }
+
+  .card-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  .monkey-card {
+    background: linear-gradient(135deg, var(--navy), var(--blue-dark));
+    border-radius: 20px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    animation: fadeUp 0.4s ease both;
+    animation-delay: 0.1s;
+  }
+
+  @media(max-width: 560px) {
+    .monkey-card { flex-direction: column; text-align: center; padding: 28px 20px; gap: 20px; }
+  }
+
+  .monkey-card img {
+    width: 130px;
+    height: auto;
+    flex-shrink: 0;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
+    animation: monkeyFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes monkeyFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .monkey-card-text h2 {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 10px;
+  }
+
+  .monkey-card-text p {
+    color: rgba(255,255,255,0.80);
+    font-size: 0.92rem;
+    margin-bottom: 0;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  @media(max-width: 480px) { .stat-row { grid-template-columns: 1fr; } }
+
+  .stat {
+    background: var(--sky);
+    border: 2px solid var(--sky-mid);
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .quote-block {
+    background: var(--sky);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 14px 14px 0;
+    padding: 20px 24px;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .quote-block::before {
+    content: '"';
+    font-size: 4rem;
+    color: var(--sky-deep);
+    font-family: 'Lora', serif;
+    line-height: 0;
+    position: absolute;
+    top: 28px;
+    left: 12px;
+    opacity: 0.5;
+  }
+
+  .quote-block p {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--navy);
+    padding-left: 24px;
+    margin-bottom: 8px;
+  }
+
+  .quote-attr {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-left: 24px;
+  }
+
+  .quote-attr span { color: var(--blue); }
+
+  .cta-card {
+    background: linear-gradient(135deg, var(--red), #c0321a);
+    border-radius: 20px;
+    padding: 36px 40px;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+    animation-delay: 0.2s;
+  }
+
+  @media(max-width: 560px) { .cta-card { padding: 28px 20px; } }
+
+  .cta-card h2 {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 10px;
+  }
+
+  .cta-card p {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+  }
+
+  .btn-white {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--red);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 28px 24px;
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-monkey { width: 44px; height: auto; opacity: 0.85; }
+  footer strong { color: rgba(255,255,255,0.88); }
+  .heart { color: #e74c7c; }
+  footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  footer a:hover { color: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo-wrap">
+      <img src="/monkey.png" alt="Theo's Fight" class="logo-monkey" />
+      <div class="logo-text">Theo's <span>Fight</span></div>
+    </a>
+    <a href="/" class="back-btn">← Back to Grant Finder</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="monkey-card">
+    <img src="/monkey.png" alt="Theo's mascot" />
+    <div class="monkey-card-text">
+      <h2>Built by a family, for families</h2>
+      <p>Theo's Fight was created by Andy Hutton, whose son Theo inspired every part of this project. We know what it feels like to be in your position — because we've been there too.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💙 Our Story</div>
+    <p>When Theo was diagnosed, our family stepped into the unknown. Every appointment, every assessment, every piece of equipment — it all came with uncertainty, paperwork, phone calls, waiting lists, and costs that nobody fully prepares you for.</p>
+    <p>We threw ourselves into fundraising. We called our campaign <strong>Theo's Fight</strong> — because that's exactly what it felt like. A fight. Not against Theo's condition, but against the systems, the waiting times, and the financial barriers that stand between disabled children and the equipment they need.</p>
+
+
+
+    <p>We knew not every family has the network, the energy, or the time to fundraise — especially when you're already stretched to your limits just getting through each day. That's why we built this.</p>
+
+    <div class="quote-block">
+      <p>When starting out on our family's journey, every step was into the unknown. Appointments, diagnosis, equipment, time frames and costs are all causes of stress. Let us help take a little bit of that pressure away.</p>
+      <div class="quote-attr">— Andy, <span>Theo's dad & founder of Theo's Fight</span></div>
+    </div>
+
+    <p>So we built this. A free tool that does the searching for you — finding real UK grants for specialist equipment, and helping you apply with a personalised letter written around your child's unique needs and personality.</p>
+    <p>No assumptions. No jargon. No cost. Just a little bit of the pressure taken away.</p>
+  </div>
+
+  <div class="card" style="animation-delay:0.1s;">
+    <div class="card-title">🐒 Why the Monkey?</div>
+    <p>The monkey holding the T has been Theo's symbol from the very beginning. He featured on every piece of fundraising material, every social post, every event. He became part of our family story.</p>
+    <p>When we built Theo's Fight, it felt only right that he came with us. He's a reminder of where this all started — and a promise that the spirit of Theo's original campaign lives on in every family we help.</p>
+  </div>
+
+  <div class="card" style="animation-delay:0.15s;">
+    <div class="card-title">🔒 Our Promise to You</div>
+    <p>We will never charge families to use this service. Ever.</p>
+    <p>We will never store, sell, or share your personal information or your child's medical details.</p>
+    <p>We will always describe your child using your words — never assumptions or generalisations.</p>
+    <p>And we will always be honest about what this tool can and can't do. We help you find grants and apply for them. The rest of the fight is yours — but you don't have to start it alone.</p>
+  </div>
+
+  <div class="cta-card">
+    <h2>Ready to find grants for your child?</h2>
+    <p>It takes just a few minutes. Tell us about your child and we'll do the searching for you.</p>
+    <a href="/" class="btn-white">🔍 Start Your Search</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <img src="/monkey.png" alt="" class="footer-monkey" />
+    <div>
+      <strong>Theo's Fight</strong> — Built with love to help families access the equipment their children deserve.<br>
+      Free to use, always &nbsp;·&nbsp; Made in the UK <span class="heart">♥</span> &nbsp;·&nbsp;
+      <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+      <a href="/contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
