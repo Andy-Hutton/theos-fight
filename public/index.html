@@ -925,9 +925,12 @@
       <div class="results-count" id="resultsCount">0 matches</div>
     </div>
     <div id="grantsContainer"></div>
-    <div style="margin-top:28px;padding:20px 24px;background:var(--sky);border-radius:14px;border:2px solid var(--sky-mid);">
-      <p style="font-size:0.88rem;color:var(--navy);font-weight:700;">💡 <strong>Tip:</strong> You can apply to multiple grants at the same time — most organisations are aware families do this and it is completely acceptable. Click "Draft My Application" on each one above.</p>
-    </div>
+    <div style="margin-top:28px;padding:20px 24px;background:var(--sky);border-radius:14px;border:2px solid var(--sky-mid);margin-bottom:12px;">
+  <p style="font-size:0.88rem;color:var(--navy);font-weight:700;">💡 <strong>Tip:</strong> You can apply to multiple grants at the same time — most organisations are aware families do this and it is completely acceptable. Click "Draft My Application" on each one above.</p>
+</div>
+<div style="padding:16px 24px;background:#fff8ed;border-radius:14px;border:2px solid #fde8b8;">
+  <p style="font-size:0.82rem;color:#7a5c1e;font-weight:700;">⚠️ <strong>Please note:</strong> Grant details including URLs and email addresses are provided as a guide. We always recommend verifying contact details and eligibility criteria directly on each organisation's website before applying.</p>
+</div>
   </div>
 
 </main>
@@ -1053,9 +1056,20 @@
   }
 
   function showResults(grants) {
+  document.getElementById('loadingCard').classList.remove('visible');
+
+  if (!grants || grants.length === 0) {
     document.getElementById('loadingCard').classList.remove('visible');
-    document.getElementById('resultsTitle').textContent = 'Grants found for ' + formData.childName;
-    document.getElementById('resultsCount').textContent = grants.length + ' matches';
+    document.getElementById('formCard').style.display = 'block';
+    const err = document.getElementById('formError');
+    err.textContent = 'We could not find any matching grants right now. Try broadening your search or contact us at hello@theosfight.co.uk and we will help personally.';
+    err.classList.add('visible');
+    setStep(1);
+    return;
+  }
+
+  document.getElementById('resultsTitle').textContent = 'Grants found for ' + formData.childName;
+  document.getElementById('resultsCount').textContent = grants.length + ' matches';
 
     const container = document.getElementById('grantsContainer');
     container.innerHTML = '';
