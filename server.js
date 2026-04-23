@@ -102,7 +102,8 @@ app.post('/draft-application', draftLimiter, async (req, res) => {
     ? req.body.equipment.slice(0, 10).map(e => sanitiseText(e, 50))
     : [];
   const grantName = sanitiseText(req.body.grantName, 100);
-  const organisation = sanitiseText(req.body.organisation, 100);
+const organisation = sanitiseText(req.body.organisation, 100);
+const childDescription = sanitiseText(req.body.childDescription, 600);
 
   try {
     const message = await client.messages.create({
@@ -110,7 +111,7 @@ app.post('/draft-application', draftLimiter, async (req, res) => {
       max_tokens: 1000,
       messages: [{
         role: 'user',
-        content: `Write a heartfelt professional grant application letter for a UK family. Grant: ${grantName} by ${organisation}. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}. Write a complete ready-to-send letter, warm and compelling. Use [PARENT NAME] as placeholder for parent name.`
+       content: `Write a heartfelt professional grant application letter for a UK family. Grant: ${grantName} by ${organisation}. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}.About this child in the family's own words: ${childDescription || 'Not provided'}. IMPORTANT: Base all descriptions of the child entirely on what the family has told you above. Never assume abilities, emotions, or behaviours that have not been mentioned. If no description was provided, describe only the factual details given. Write a complete ready-to-send letter, warm and compelling. Use [PARENT NAME] as placeholder for parent name.`
       }]
     });
 
