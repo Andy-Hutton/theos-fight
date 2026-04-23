@@ -680,6 +680,74 @@
 
   .error-msg.visible { display: block; }
 
+  /* GDPR BANNER */
+  .gdpr-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--navy);
+    border-top: 3px solid var(--blue);
+    z-index: 200;
+    animation: slideUp 0.4s ease both;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .gdpr-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .gdpr-text {
+    flex: 1;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.80);
+    line-height: 1.55;
+    min-width: 260px;
+  }
+
+  .gdpr-text strong { color: white; }
+
+  .gdpr-text a {
+    color: var(--sky-deep);
+    text-decoration: underline;
+  }
+
+  .gdpr-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .gdpr-accept {
+    background: var(--blue);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .gdpr-accept:hover { background: var(--blue-dark); }
+
+  .gdpr-banner.hidden {
+    display: none;
+  }
+
   /* FOOTER */
   footer {
     background: var(--navy);
@@ -1081,6 +1149,31 @@
       setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
     });
   }
+
+  // GDPR BANNER
+  function acceptGdpr() {
+    document.getElementById('gdprBanner').classList.add('hidden');
+    localStorage.setItem('gdpr-accepted', 'true');
+  }
+
+  window.addEventListener('load', () => {
+    if (localStorage.getItem('gdpr-accepted') === 'true') {
+      document.getElementById('gdprBanner').classList.add('hidden');
+    }
+  });
 </script>
+
+<!-- GDPR BANNER -->
+<div class="gdpr-banner" id="gdprBanner">
+  <div class="gdpr-inner">
+    <div class="gdpr-text">
+      <strong>🔒 Your privacy matters.</strong> Theo's Fight does not store or share any personal information. Details you enter are used only to search for grants via Anthropic's Claude AI and are never saved. We don't use tracking cookies or advertising. <a href="/privacy.html">Read our full privacy policy</a>.
+    </div>
+    <div class="gdpr-actions">
+      <button class="gdpr-accept" onclick="acceptGdpr()">Got it, thanks</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
