@@ -13,14 +13,7 @@
 ...
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Theo's Fight - Free Grant Finder for Families with Disabled Children UK</title>
-<meta name="description" content="Find financial grants for your disabled child's specialist equipment. Free UK grant finder for wheelchairs, communication aids, sensory equipment and more. We search and help you apply.">
-<meta name="keywords" content="grants disabled children UK, wheelchair funding, communication aid grants, sensory equipment funding, disabled child equipment grant, family fund, newlife foundation">
-<meta property="og:title" content="Theo's Fight - Free Grant Finder for Disabled Children">
-<meta property="og:description" content="Find and apply for UK grants for your disabled child's specialist equipment. Free, fast and built by a family who understands.">
-<meta property="og:url" content="https://theosfight.co.uk">
-<meta property="og:type" content="website">
-<link rel="canonical" href="https://theosfight.co.uk">
+<title>Theo's Fight - Grant Finder for Families</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
@@ -1059,6 +1052,7 @@
   async function startSearch() {
     if (!validateForm()) {
       document.getElementById('formError').classList.add('visible');
+      gtag('event', 'grant_search', { event_category: 'engagement', event_label: formData.diagnosis });
       return;
     }
 
@@ -1161,7 +1155,7 @@
         <div class="grant-tags">${tags}</div>
         <div class="grant-actions">
           <button class="btn-apply" onclick="openDraft(${idx})">✍️ Draft My Application</button>
-          <a class="btn-outline" href="${grant.url}" target="_blank" rel="noopener">🔗 View Grant</a>
+          <a class="btn-outline" href="${grant.url}" target="_blank" rel="noopener">🔗 View Gran<a class="btn-outline" href="${grant.url}" target="_blank" rel="noopener" onclick="gtag('event', 'grant_link_clicked', { event_category: 'engagement', event_label: '${grant.name}'})">🔗 View Grant</a>t</a>
         </div>
       `;
       container.appendChild(card);
@@ -1188,6 +1182,7 @@
 
   async function openDraft(grantIndex) {
     const grant = grantsList[grantIndex];
+    gtag('event', 'draft_generated', { event_category: 'engagement', event_label: grant.name });
     document.getElementById('modalGrantName').textContent = grant.name;
     document.getElementById('draftText').textContent = 'Generating your personalised letter... this may take a moment. Your letter will appear here shortly.';
     document.getElementById('modalOverlay').classList.add('visible');
@@ -1240,6 +1235,7 @@ if (email) {
   function copyDraft() {
     const text = document.getElementById('draftText').textContent;
     navigator.clipboard.writeText(text).then(() => {
+      gtag('event', 'letter_copied', { event_category: 'engagement' });
       const btn = document.getElementById('copyBtn');
       btn.textContent = '✅ Copied!';
       setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
