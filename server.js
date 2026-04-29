@@ -55,6 +55,41 @@ function parseGrantsFromResponse(text) {
   return JSON.parse(cleaned);
 }
 
+async function validateGrantUrls(grants) {
+  const validatedGrants = await Promise.all(grants.map(async (grant) => {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(grant.url, {
+        method: 'HEAD',
+        signal: controller.signal,
+        redirect: 'follow'
+      });
+      
+      clearTimeout(timeout);
+      
+      if (response.ok || response.status === 405) {
+        return { ...grant, urlVerified: true };
+      } else {
+        return { ...grant, url: extractBaseUrl(grant.url), urlVerified: false };
+      }
+    } catch (err) {
+      return { ...grant, url: extractBaseUrl(grant.url), urlVerified: false };
+    }
+  }));
+  
+  return validatedGrants;
+}
+
+function extractBaseUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.origin;
+  } catch {
+    return url;
+  }
+}
 app.post('/search-grants', searchLimiter, async (req, res) => {
   if (!validateRequest(req.body)) {
     return res.status(400).json({ success: false, error: 'Please fill in all required fields.' });
@@ -75,12 +110,13 @@ app.post('/search-grants', searchLimiter, async (req, res) => {
       max_tokens: 2000,
       messages: [{
         role: 'user',
-        content: `You are a UK grant specialist helping families with disabled children find financial support for specialist equipment. Search for real UK grants for this family. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}. Additional context: ${context || 'None provided'}. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Organisation name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "applications@example.org"}]`
+        content: `You are a UK grant specialist helping families with disabled children find financial support for specialist equipment. Search for real UK grants for this family. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}. Additional context: ${context || 'None provided'}. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Organisation name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "applications@example.org"}] Only use stable homepage or main section URLs for reputable UK organisations. Never use deep links or specific campaign pages that may change.`
       }]
     });
 
     const grants = parseGrantsFromResponse(message.content[0].text);
-    res.json({ success: true, grants });
+const validatedGrants = await validateGrantUrls(grants);
+res.json({ success: true, grants: validatedGrants });
 
   } catch (error) {
     console.error('Search error:', error.message);
