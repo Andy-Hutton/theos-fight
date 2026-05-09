@@ -16,7 +16,7 @@ app.use(helmet({
       fontSrc: ["'self'", "fonts.gstatic.com"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       scriptSrcAttr: ["'unsafe-inline'"],
-      imgSrc: ["'self'", "data:"],
+      imgSrc: ["'self'", "data:", "api.qrserver.com"],
       connectSrc: ["'self'"]
     }
   }

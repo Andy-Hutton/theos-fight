@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theo's Fight - Sticker Designs</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  body {
+    background: #f0f0f0;
+    font-family: 'Nunito', sans-serif;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #0d3d5e;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .sticker-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .size-note {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===================== */
+  /* LAPTOP STICKER        */
+  /* ===================== */
+  .laptop-sticker {
+    width: 280px;
+    height: 280px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+    border: 3px solid #e0f4fd;
+  }
+
+  .laptop-monkey {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+
+  .laptop-qr {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+  }
+
+  .laptop-url {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #0d3d5e;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: 18px;
+    left: 16px;
+  }
+
+  /* ===================== */
+  /* BUMPER STICKER        */
+  /* ===================== */
+ .bumper-sticker {
+    width: 620px;
+    height: 200px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    gap: 12px;
+    border: 3px solid #e0f4fd;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bumper-sticker::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #0d3d5e, #2a9fd6);
+  }
+
+  .bumper-sticker::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #0d3d5e, #2a9fd6);
+  }
+
+   .bumper-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .bumper-theos {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2.0rem;
+    color: #e03b1f;
+    line-height: 1;
+    margin-bottom: -4px;
+  }
+
+  .bumper-fight {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #0d3d5e;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .bumper-url {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2a9fd6;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .bumper-tagline {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #5a8fa8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .bumper-monkey {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .bumper-qr {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+  }
+  .bumper-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ===================== */
+  /* DARK VERSION          */
+  /* ===================== */
+  .bumper-sticker.dark {
+    background: #0d3d5e;
+    border-color: #1a6fa0;
+  }
+
+  .bumper-sticker.dark::before,
+  .bumper-sticker.dark::after {
+    background: linear-gradient(90deg, #2a9fd6, #7cc8ef);
+  }
+
+  .bumper-sticker.dark .bumper-fight {
+    color: white;
+  }
+
+  .bumper-sticker.dark .bumper-url {
+    color: #7cc8ef;
+  }
+
+  .bumper-sticker.dark .bumper-tagline {
+    color: rgba(255,255,255,0.5);
+  }
+
+  .laptop-sticker.dark {
+    background: #0d3d5e;
+    border-color: #1a6fa0;
+  }
+
+  .laptop-sticker.dark .laptop-url {
+    color: #7cc8ef;
+  }
+  .bumper-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 4rem;
+    color: #e03b1f;
+    line-height: 1.1;
+    white-space: nowrap;
+    margin-bottom: 2px;
+  }
+
+  .bumper-title-url {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #0d3d5e;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .bumper-title span {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #2a9fd6;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+</style>
+</head>
+<body>
+
+<h1 style="color:#0d3d5e;font-size:1.5rem;margin-bottom:0;">Theo's Fight — Sticker Designs</h1>
+<p style="color:#888;font-size:0.85rem;margin-top:4px;">Preview designs — send to printer as reference</p>
+
+<!-- LAPTOP STICKER WHITE -->
+<div class="sticker-wrap">
+  <h2>Laptop Sticker — White (70mm x 70mm)</h2>
+  <div class="laptop-sticker">
+    <img class="laptop-monkey" src="monkey.png" alt="Theo's Fight Monkey" />
+    <span class="laptop-url">theosfight.co.uk</span>
+    <img class="laptop-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://theosfight.co.uk&color=0d3d5e&bgcolor=ffffff" alt="QR Code" />
+  </div>
+  <div class="size-note">Print size: 70mm × 70mm</div>
+</div>
+
+<!-- LAPTOP STICKER DARK -->
+<div class="sticker-wrap">
+  <h2>Laptop Sticker — Navy (70mm x 70mm)</h2>
+  <div class="laptop-sticker dark">
+    <img class="laptop-monkey" src="monkey.png" alt="Theo's Fight Monkey" />
+    <span class="laptop-url">theosfight.co.uk</span>
+    <img class="laptop-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://theosfight.co.uk&color=7cc8ef&bgcolor=0d3d5e" alt="QR Code" />
+  </div>
+  <div class="size-note">Print size: 70mm × 70mm</div>
+</div>
+
+<!-- BUMPER STICKER WHITE -->
+<!-- BUMPER STICKER WHITE -->
+<div class="sticker-wrap">
+  <h2>Bumper Sticker — White (250mm x 80mm)</h2>
+<div class="bumper-sticker">
+    <div class="bumper-left">
+      <div class="bumper-title">Theo's Fight</div>
+<div class="bumper-title-url">theosfight.co.uk</div>
+      <div class="bumper-tagline">Free equipment grant finder for disabled children</div>
+    </div>
+    <div class="bumper-right">
+      <img class="bumper-monkey" src="monkey.png" alt="Theo's Fight Monkey" />
+      <img class="bumper-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://theosfight.co.uk&color=0d3d5e&bgcolor=ffffff" alt="QR Code" />
+    </div>
+  </div>
+</div>
+
+<!-- BUMPER STICKER DARK -->
+<div class="sticker-wrap">
+  <h2>Bumper Sticker — Navy (250mm x 80mm)</h2>
+  <div class="bumper-sticker dark">
+    <div class="bumper-left">
+      <div class="bumper-title">Theo's Fight<span>theosfight.co.uk</span></div>
+      <div class="bumper-tagline">Free equipment grant finder for disabled children</div>
+    <img class="bumper-monkey" src="monkey.png" alt="Theo's Fight Monkey" />
+    <img class="bumper-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://theosfight.co.uk&color=7cc8ef&bgcolor=0d3d5e" alt="QR Code" />
+  </div>
+  
+</div>
+
+</body>
+</html>
