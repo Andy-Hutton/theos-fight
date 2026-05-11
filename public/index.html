@@ -392,11 +392,11 @@
 
     <div class="form-grid">
       <div class="form-group">
-        <label>Child's first name <span class="required">*</span></label>
-        <input type="text" id="childName" placeholder="e.g. Theo" />
+        <label for="childName">Child's first name <span class="required">*</span></label>
+<input type="text" id="childName" placeholder="e.g. Theo" />
       </div>
       <div class="form-group">
-        <label>Child's age <span class="required">*</span></label>
+        <label for="childAge">>Child's age <span class="required">*</span></label>
         <select id="childAge">
           <option value="">Select age</option>
           <option>Under 1</option>
@@ -408,17 +408,17 @@
         </select>
       </div>
       <div class="form-group full">
-        <label>Diagnosis / condition <span class="required">*</span></label>
+        <label for="diagnosis">Diagnosis / condition <span class="required">*</span></label>
         <input type="text" id="diagnosis" placeholder="e.g. Cerebral Palsy, Muscular Dystrophy, Autism..." />
         <span class="hint">Enter as much or as little as you're comfortable sharing</span>
       </div>
       <div class="form-group full">
-        <label>Tell us about your child <span style="font-weight:400;color:var(--muted)">(optional but really helps)</span></label>
+        <label for="childDescription">Tell us about your child <span style="font-weight:400;color:var(--muted)">(optional but really helps)</span></label>
         <textarea id="childDescription" placeholder="e.g. Theo is a happy 8 year old who loves music. He communicates using an eye gaze device and understands everything said to him. He cannot walk independently and uses a manual wheelchair which he is rapidly outgrowing..." style="min-height:110px;"></textarea>
         <span class="hint">Tell us about their personality, how they communicate, what they enjoy, and what this equipment would mean for their daily life. We'll use your own words in the application letter — never assumptions.</span>
       </div>
       <div class="form-group full">
-        <label>Your location <span class="required">*</span></label>
+        <label for="location">Your location <span class="required">*</span></label>
         <input type="text" id="location" placeholder="Town, city or postcode e.g. Liverpool or L1 1AA" />
         <span class="hint">Used to find local authority and regional funds</span>
       </div>
@@ -438,7 +438,7 @@
     </div>
 
     <div style="margin-top:24px;" class="form-group">
-      <label>Any additional context? <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <label for="context">Any additional context? <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
       <textarea id="context" placeholder="e.g. NHS has assessed Theo but there's a 14-month wait, we need a wheelchair urgently"></textarea>
     </div>
 
@@ -510,7 +510,7 @@
 
 <footer>
   <div class="footer-inner">
-    <img src="/monkey.png" alt="Theo's Fight mascot" class="footer-monkey" />
+    <img src="/monkey.png" alt="Theo's Fight mascot" class="footer-monkey" width="48" height="48" />
     <div>
       <strong>Theo's Fight</strong> — Built with love to help families access the equipment their children deserve.<br>
       Free to use, always &nbsp;·&nbsp; Made in the UK <span class="heart">♥</span> &nbsp;·&nbsp;
