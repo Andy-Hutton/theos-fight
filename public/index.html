@@ -45,7 +45,10 @@
 }
 </script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"></noscript>
 <style>
   :root {
     --sky: #e0f4fd;
@@ -327,7 +330,7 @@
       </div>
     </div>
     <div class="header-monkey">
-<img src="/monkey.png" alt="Theo's Fight - free equipment grant finder for children with additional needs" />
+<img src="/monkey.png" alt="Theo's Fight - free equipment grant finder for children with additional needs" width="210" height="210" />
     </div>
   </div>
 </header>
@@ -448,7 +451,7 @@
   </div>
 
   <div class="loading-card" id="loadingCard">
-   <img src="/monkey.png" alt="Theo's Fight searching for grants" class="loading-monkey" />
+   <img src="/monkey.png" alt="Theo's Fight searching for grants" class="loading-monkey" width="90" height="90" />
     <div class="loading-title">Searching for grants for <span id="loadingName">your child</span>...</div>
     <p style="font-size:0.88rem;color:var(--muted);">This usually takes around 15-20 seconds</p>
     <ul class="loading-steps">
