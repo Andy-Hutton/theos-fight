@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Stories - Theo's Fight</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #e0f4fd;
+    --sky-mid: #b8e4f7;
+    --sky-deep: #7cc8ef;
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --navy: #0d3d5e;
+    --white: #ffffff;
+    --soft: #f4fafd;
+    --text: #1a3a4f;
+    --muted: #5a8fa8;
+    --red: #e03b1f;
+    --card-shadow: 0 4px 24px rgba(42,159,214,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--soft); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 60%, var(--blue) 100%);
+    padding: 0; position: relative; overflow: hidden;
+  }
+
+  header::before {
+    content: ''; position: absolute; top: -60px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(124,200,239,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px; margin: 0 auto; padding: 32px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; position: relative; z-index: 1;
+  }
+
+  .logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .logo-monkey { width: 44px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+  .logo-text { font-size: 1.8rem; font-weight: 900; color: white; }
+  .logo-text span { color: #7cc8ef; }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    color: white; font-family: 'Nunito', sans-serif; font-size: 0.85rem;
+    font-weight: 700; padding: 8px 16px; border-radius: 8px;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .nav-bar { background: var(--white); border-bottom: 2px solid var(--sky-mid); }
+  .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; }
+  .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 14px 16px; font-size: 0.85rem; font-weight: 800; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  .nav-link:hover { color: var(--blue); border-bottom-color: var(--sky-deep); }
+  .nav-link.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  main { max-width: 760px; margin: 0 auto; padding: 40px 24px 60px; }
+
+  .page-header { text-align: center; margin-bottom: 40px; }
+  .page-title { font-size: 1.8rem; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .page-subtitle { font-size: 0.95rem; color: var(--muted); line-height: 1.65; max-width: 500px; margin: 0 auto 24px; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--red) 0%, #c0321a 100%);
+    color: white; font-family: 'Nunito', sans-serif; font-size: 0.95rem;
+    font-weight: 800; padding: 12px 28px; border: none; border-radius: 12px;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(224,59,31,0.30);
+    transition: transform 0.15s, box-shadow 0.15s; text-decoration: none;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(224,59,31,0.38); }
+
+  .story-card {
+    background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow);
+    padding: 28px; margin-bottom: 20px; border-left: 5px solid var(--blue);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .story-card:nth-child(2) { border-left-color: var(--red); animation-delay: 0.08s; }
+  .story-card:nth-child(3) { border-left-color: #f9a826; animation-delay: 0.16s; }
+
+  .story-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .story-name { font-size: 1rem; font-weight: 800; color: var(--navy); }
+  .story-meta { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+  .story-rating { font-size: 1rem; }
+  .story-equipment { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .equipment-tag { background: var(--sky); color: var(--blue-dark); font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; }
+  .story-text { font-size: 0.92rem; color: var(--text); line-height: 1.7; font-family: 'Lora', serif; font-style: italic; }
+
+  .empty-state {
+    text-align: center; padding: 60px 24px;
+    background: var(--white); border-radius: 20px; box-shadow: var(--card-shadow);
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+  .empty-title { font-size: 1.3rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .empty-text { font-size: 0.92rem; color: var(--muted); line-height: 1.65; margin-bottom: 24px; }
+
+  .cta-strip {
+    background: linear-gradient(135deg, var(--navy), var(--blue-dark));
+    border-radius: 16px; padding: 28px 32px; text-align: center; margin-top: 32px;
+  }
+  .cta-strip h3 { font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 8px; }
+  .cta-strip p { font-size: 0.88rem; color: rgba(255,255,255,0.75); margin-bottom: 18px; }
+
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.55);
+    text-align: center; padding: 28px 24px; font-size: 0.82rem; line-height: 1.8;
+  }
+  .footer-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .footer-monkey { width: 44px; height: auto; opacity: 0.85; }
+  footer strong { color: rgba(255,255,255,0.88); }
+  .heart { color: #e74c7c; }
+  footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  footer a:hover { color: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo-wrap">
+      <img src="/monkey.webp" alt="Theo's Fight" class="logo-monkey" />
+      <div class="logo-text">Theo's <span>Fight</span></div>
+    </a>
+    <a href="/" class="back-btn">← Back to Grant Finder</a>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a href="/" class="nav-link">🔍 Grant Finder</a>
+    <a href="/about.html" class="nav-link">💙 About</a>
+    <a href="/feedback.html" class="nav-link">⭐ Share Your Experience</a>
+    <a href="/testimonials.html" class="nav-link active">💬 Stories</a>
+    <a href="/contact.html" class="nav-link">📧 Contact</a>
+    <a href="/privacy.html" class="nav-link">🔒 Privacy</a>
+  </div>
+</nav>
+
+<main>
+
+  <div class="page-header">
+    <h1 class="page-title">💬 Family Stories</h1>
+    <p class="page-subtitle">Real experiences from families who have used Theo's Fight to find funding for their child's equipment.</p>
+    <a href="/feedback.html" class="btn-primary">⭐ Share Your Experience</a>
+  </div>
+
+  <!-- TESTIMONIALS GO HERE - add approved ones below this comment -->
+  <div id="testimonials">
+
+    <div class="empty-state">
+      <div class="empty-icon">💙</div>
+      <div class="empty-title">Stories coming soon</div>
+      <p class="empty-text">We've only just launched — but families are already using Theo's Fight to find grants and apply for funding. Be the first to share your experience!</p>
+      <a href="/feedback.html" class="btn-primary">⭐ Share Your Story</a>
+    </div>
+
+  </div>
+
+  <div class="cta-strip">
+    <h3>Did Theo's Fight help your family?</h3>
+    <p>Your story could inspire another family to keep fighting for what their child needs.</p>
+    <a href="/feedback.html" class="btn-primary">⭐ Share Your Experience</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <img src="/monkey.webp" alt="" class="footer-monkey" />
+    <div>
+      <strong>Theo's Fight</strong> — Built with love to help families access the equipment their children deserve.<br>
+      Free to use, always &nbsp;·&nbsp; Made in the UK <span class="heart">♥</span> &nbsp;·&nbsp;
+      <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+      <a href="/contact.html">Contact</a> &nbsp;·&nbsp;
+      <a href="/about.html">About</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

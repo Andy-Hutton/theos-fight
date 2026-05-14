@@ -163,6 +163,75 @@ app.post('/report-grant', (req, res) => {
   console.log(`⚠️ GRANT REPORTED: ${grantName} by ${organisation} - ${new Date().toISOString()}`);
   res.json({ success: true });
 });
+app.post('/submit-feedback', async (req, res) => {
+  const name = sanitiseText(req.body.name, 50) || 'Anonymous';
+  const location = sanitiseText(req.body.location, 100);
+  const equipment = sanitiseText(req.body.equipment, 200);
+  const experience = sanitiseText(req.body.experience, 1000);
+  const rating = parseInt(req.body.rating) || 0;
+
+  if (!experience) {
+    return res.status(400).json({ success: false });
+  }
+
+  console.log(`
+⭐ NEW FEEDBACK SUBMISSION
+Name: ${name}
+Location: ${location}
+Equipment: ${equipment}
+Rating: ${rating}/5
+Experience: ${experience}
+Date: ${new Date().toISOString()}
+  `);
+
+  res.json({ success: true });
+});
+app.post('/submit-feedback', async (req, res) => {
+  const name = sanitiseText(req.body.name, 50) || 'Anonymous';
+  const location = sanitiseText(req.body.location, 100);
+  const equipment = sanitiseText(req.body.equipment, 200);
+  const experience = sanitiseText(req.body.experience, 1000);
+  const rating = parseInt(req.body.rating) || 0;
+
+  if (!experience) {
+    return res.status(400).json({ success: false });
+  }
+
+  console.log(`
+⭐ NEW FEEDBACK SUBMISSION
+Name: ${name}
+Location: ${location}
+Equipment: ${equipment}
+Rating: ${rating}/5
+Experience: ${experience}
+Date: ${new Date().toISOString()}
+  `);
+
+  res.json({ success: true });
+});
+app.post('/submit-feedback', async (req, res) => {
+  const name = sanitiseText(req.body.name, 50) || 'Anonymous';
+  const location = sanitiseText(req.body.location, 100);
+  const equipment = sanitiseText(req.body.equipment, 200);
+  const experience = sanitiseText(req.body.experience, 1000);
+  const rating = parseInt(req.body.rating) || 0;
+
+  if (!experience) {
+    return res.status(400).json({ success: false });
+  }
+
+  console.log(`
+⭐ NEW FEEDBACK SUBMISSION
+Name: ${name}
+Location: ${location}
+Equipment: ${equipment}
+Rating: ${rating}/5
+Experience: ${experience}
+Date: ${new Date().toISOString()}
+  `);
+
+  res.json({ success: true });
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Theo's Fight running securely on http://localhost:${PORT}`);

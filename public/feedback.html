@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share Your Experience - Theo's Fight</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #e0f4fd;
+    --sky-mid: #b8e4f7;
+    --sky-deep: #7cc8ef;
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --navy: #0d3d5e;
+    --white: #ffffff;
+    --soft: #f4fafd;
+    --text: #1a3a4f;
+    --muted: #5a8fa8;
+    --red: #e03b1f;
+    --success: #2ecc71;
+    --card-shadow: 0 4px 24px rgba(42,159,214,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--soft); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 60%, var(--blue) 100%);
+    padding: 0; position: relative; overflow: hidden;
+  }
+
+  header::before {
+    content: ''; position: absolute; top: -60px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(124,200,239,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px; margin: 0 auto; padding: 32px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; position: relative; z-index: 1;
+  }
+
+  .logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .logo-monkey { width: 44px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+  .logo-text { font-size: 1.8rem; font-weight: 900; color: white; }
+  .logo-text span { color: #7cc8ef; }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    color: white; font-family: 'Nunito', sans-serif; font-size: 0.85rem;
+    font-weight: 700; padding: 8px 16px; border-radius: 8px;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .nav-bar { background: var(--white); border-bottom: 2px solid var(--sky-mid); }
+  .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; }
+  .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 14px 16px; font-size: 0.85rem; font-weight: 800; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  .nav-link:hover { color: var(--blue); border-bottom-color: var(--sky-deep); }
+  .nav-link.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  main { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; }
+
+  .card {
+    background: var(--white); border-radius: 20px;
+    box-shadow: var(--card-shadow); padding: 40px;
+    margin-bottom: 20px; animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media(max-width: 560px) { .card { padding: 24px 20px; } }
+
+  .page-title { font-size: 1.8rem; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .page-subtitle { font-size: 0.92rem; color: var(--muted); margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid var(--sky); line-height: 1.6; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+
+  label { font-size: 0.8rem; font-weight: 800; color: var(--navy); text-transform: uppercase; letter-spacing: 0.6px; }
+  label .optional { font-weight: 400; color: var(--muted); text-transform: none; letter-spacing: 0; }
+
+  input, textarea, select {
+    font-family: 'Nunito', sans-serif; font-size: 0.95rem; color: var(--text);
+    background: var(--sky); border: 2px solid var(--sky-mid); border-radius: 10px;
+    padding: 10px 14px; outline: none; transition: border 0.2s, box-shadow 0.2s; width: 100%;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,159,214,0.12); background: var(--white);
+  }
+
+  textarea { resize: vertical; min-height: 120px; }
+  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  .equipment-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .tag-btn {
+    background: var(--sky); border: 2px solid var(--sky-mid); border-radius: 20px;
+    padding: 6px 14px; font-size: 0.82rem; font-weight: 700; color: var(--text);
+    cursor: pointer; transition: all 0.15s; font-family: 'Nunito', sans-serif;
+  }
+  .tag-btn:hover { border-color: var(--sky-deep); }
+  .tag-btn.selected { border-color: var(--blue); background: rgba(42,159,214,0.08); color: var(--blue-dark); }
+
+  .consent-box {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--sky); border: 2px solid var(--sky-mid);
+    border-radius: 12px; padding: 16px; margin-bottom: 24px;
+  }
+
+  .consent-box input[type="checkbox"] {
+    width: 18px; height: 18px; accent-color: var(--blue);
+    margin: 0; padding: 0; background: none; border: none;
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .consent-text { font-size: 0.85rem; color: var(--text); line-height: 1.55; }
+  .consent-text a { color: var(--blue); }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--red) 0%, #c0321a 100%);
+    color: white; font-family: 'Nunito', sans-serif; font-size: 1rem;
+    font-weight: 800; padding: 14px 32px; border: none; border-radius: 12px;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(224,59,31,0.30);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(224,59,31,0.38); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .error-msg {
+    background: #ffeaea; border: 2px solid #ffb3b3; border-radius: 10px;
+    padding: 14px 18px; color: #c0392b; font-size: 0.88rem;
+    font-weight: 700; margin-bottom: 16px; display: none;
+  }
+  .error-msg.visible { display: block; }
+
+  .success-card {
+    background: var(--white); border-radius: 20px; box-shadow: var(--card-shadow);
+    padding: 48px 40px; text-align: center; display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+  .success-card.visible { display: block; }
+  .success-icon { font-size: 3rem; margin-bottom: 16px; }
+  .success-title { font-size: 1.6rem; font-weight: 900; color: var(--navy); margin-bottom: 10px; }
+  .success-text { font-size: 0.95rem; color: var(--muted); line-height: 1.65; margin-bottom: 24px; }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: transparent; color: var(--blue); font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem; font-weight: 800; padding: 11px 24px;
+    border: 2px solid var(--blue); border-radius: 10px;
+    cursor: pointer; transition: all 0.15s; text-decoration: none;
+  }
+  .btn-outline:hover { background: var(--sky); }
+
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.55);
+    text-align: center; padding: 28px 24px; font-size: 0.82rem; line-height: 1.8;
+  }
+  .footer-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .footer-monkey { width: 44px; height: auto; opacity: 0.85; }
+  footer strong { color: rgba(255,255,255,0.88); }
+  .heart { color: #e74c7c; }
+  footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  footer a:hover { color: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo-wrap">
+      <img src="/monkey.webp" alt="Theo's Fight" class="logo-monkey" />
+      <div class="logo-text">Theo's <span>Fight</span></div>
+    </a>
+    <a href="/" class="back-btn">← Back to Grant Finder</a>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a href="/" class="nav-link">🔍 Grant Finder</a>
+    <a href="/about.html" class="nav-link">💙 About</a>
+    <a href="/feedback.html" class="nav-link active">⭐ Share Your Experience</a>
+    <a href="/testimonials.html" class="nav-link">💬 Stories</a>
+    <a href="/contact.html" class="nav-link">📧 Contact</a>
+    <a href="/privacy.html" class="nav-link">🔒 Privacy</a>
+  </div>
+</nav>
+
+<main>
+
+  <div class="card" id="formCard">
+    <h1 class="page-title">Share Your Experience</h1>
+    <p class="page-subtitle">Did Theo's Fight help your family? We'd love to hear about it. Your story could inspire another family to keep fighting for what their child needs. 💙</p>
+
+    <div class="form-group">
+      <label>Your name <span class="optional">(optional — you can stay anonymous)</span></label>
+      <input type="text" id="submitterName" placeholder="e.g. Sarah, or leave blank to be anonymous" maxlength="50" />
+    </div>
+
+    <div class="form-group">
+      <label>Your location <span class="optional">(optional)</span></label>
+      <input type="text" id="submitterLocation" placeholder="e.g. Manchester" maxlength="100" />
+    </div>
+
+    <div class="form-group">
+      <label>What equipment were you looking for funding for? <span class="optional">(optional)</span></label>
+      <div class="equipment-tags">
+        <button type="button" class="tag-btn" onclick="toggleTag(this)">🦽 Wheelchair</button>
+        <button type="button" class="tag-btn" onclick="toggleTag(this)">🗣️ Communication device</button>
+        <button type="button" class="tag-btn" onclick="toggleTag(this)">🌈 Sensory equipment</button>
+        <button type="button" class="tag-btn" onclick="toggleTag(this)">🧍 Standing frame</button>
+        <button type="button" class="tag-btn" onclick="toggleTag(this)">🦿 Orthotics</button>
+        <button type="button" class="tag-btn" onclick="toggleTag(this)">➕ Other equipment</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Your experience <span style="color:var(--red)">*</span></label>
+      <textarea id="experienceText" placeholder="Tell us how Theo's Fight helped your family. Did you find grants you didn't know about? Did the application letter make a difference? Did you receive funding? Share as much or as little as you're comfortable with..." maxlength="1000"></textarea>
+      <span class="hint">Maximum 1000 characters</span>
+    </div>
+
+    <div class="form-group">
+      <label>Star rating <span style="color:var(--red)">*</span></label>
+      <div style="display:flex;gap:8px;margin-top:4px;" id="starRating">
+        <button type="button" class="tag-btn" onclick="setRating(1)" id="star1">⭐ 1</button>
+        <button type="button" class="tag-btn" onclick="setRating(2)" id="star2">⭐ 2</button>
+        <button type="button" class="tag-btn" onclick="setRating(3)" id="star3">⭐ 3</button>
+        <button type="button" class="tag-btn" onclick="setRating(4)" id="star4">⭐ 4</button>
+        <button type="button" class="tag-btn" onclick="setRating(5)" id="star5">⭐ 5</button>
+      </div>
+    </div>
+
+    <div class="consent-box">
+      <input type="checkbox" id="consentCheck" />
+      <div class="consent-text">
+        I agree for this feedback to be displayed publicly on theosfight.co.uk. I understand my submission will be reviewed before publication and may be edited for clarity. No personal medical information about my child will be shared. I can request removal at any time by emailing <a href="mailto:hello@theosfight.co.uk">hello@theosfight.co.uk</a>.
+      </div>
+    </div>
+
+    <div class="error-msg" id="formError">Please share your experience and tick the consent box before submitting.</div>
+
+    <button class="btn-primary" onclick="submitFeedback()" id="submitBtn">💙 Submit My Experience</button>
+  </div>
+
+  <div class="success-card" id="successCard">
+    <div class="success-icon">💙</div>
+    <div class="success-title">Thank you so much!</div>
+    <p class="success-text">Your experience has been received and will be reviewed before being published on our Stories page. We are so grateful you took the time to share — your words could inspire another family to keep fighting for what their child needs.</p>
+    <a href="/" class="btn-outline">← Back to Grant Finder</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <img src="/monkey.webp" alt="" class="footer-monkey" />
+    <div>
+      <strong>Theo's Fight</strong> — Built with love to help families access the equipment their children deserve.<br>
+      Free to use, always &nbsp;·&nbsp; Made in the UK <span class="heart">♥</span> &nbsp;·&nbsp;
+      <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+      <a href="/contact.html">Contact</a> &nbsp;·&nbsp;
+      <a href="/about.html">About</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  let selectedRating = 0;
+  let selectedEquipment = [];
+
+  function toggleTag(btn) {
+    btn.classList.toggle('selected');
+    const text = btn.textContent.trim();
+    if (btn.classList.contains('selected')) {
+      selectedEquipment.push(text);
+    } else {
+      selectedEquipment = selectedEquipment.filter(e => e !== text);
+    }
+  }
+
+  function setRating(rating) {
+    selectedRating = rating;
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.getElementById('star' + i);
+      if (i <= rating) {
+        btn.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+      }
+    }
+  }
+
+  async function submitFeedback() {
+    const experience = document.getElementById('experienceText').value.trim();
+    const consent = document.getElementById('consentCheck').checked;
+
+    if (!experience || !consent) {
+      document.getElementById('formError').classList.add('visible');
+      return;
+    }
+
+    document.getElementById('formError').classList.remove('visible');
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('submitBtn').textContent = 'Submitting...';
+
+    const payload = {
+      name: document.getElementById('submitterName').value.trim() || 'Anonymous',
+      location: document.getElementById('submitterLocation').value.trim(),
+      equipment: selectedEquipment.join(', '),
+      experience: experience,
+      rating: selectedRating,
+      consent: true
+    };
+
+    try {
+      const response = await fetch('/submit-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        document.getElementById('formCard').style.display = 'none';
+        document.getElementById('successCard').classList.add('visible');
+      } else {
+        throw new Error('Failed');
+      }
+    } catch (err) {
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').textContent = '💙 Submit My Experience';
+      document.getElementById('formError').textContent = 'Something went wrong. Please try again or email hello@theosfight.co.uk';
+      document.getElementById('formError').classList.add('visible');
+    }
+  }
+</script>
+
+</body>
+</html>
