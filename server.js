@@ -157,7 +157,12 @@ const childDescription = sanitiseText(req.body.childDescription, 600);
     res.status(500).json({ success: false, error: 'Could not generate letter. Please try again.' });
   }
 });
-
+app.post('/report-grant', (req, res) => {
+  const grantName = sanitiseText(req.body.grantName, 100);
+  const organisation = sanitiseText(req.body.organisation, 100);
+  console.log(`⚠️ GRANT REPORTED: ${grantName} by ${organisation} - ${new Date().toISOString()}`);
+  res.json({ success: true });
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Theo's Fight running securely on http://localhost:${PORT}`);

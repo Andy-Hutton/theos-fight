@@ -275,6 +275,25 @@
 
   .btn-outline { display: inline-flex; align-items: center; gap: 6px; background: transparent; color: var(--blue); font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 800; padding: 9px 20px; border: 2px solid var(--blue); border-radius: 9px; cursor: pointer; transition: all 0.15s; text-decoration: none; }
   .btn-outline:hover { background: var(--sky); }
+  .btn-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 9px 14px;
+  border: 2px solid var(--sky-mid);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-flag:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
 
   /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(13,61,94,0.55); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(3px); }
@@ -659,6 +678,7 @@
         <div class="grant-actions">
           <button class="btn-apply" onclick="openDraft(${idx})">✍️ Draft My Application</button>
           <a class="btn-outline" href="${grant.url}" target="_blank" rel="noopener" onclick="gtag('event', 'grant_link_clicked', { event_category: 'engagement', event_label: '${grant.name}'})">🔗 View Grant</a>
+<button class="btn-flag" onclick="reportGrant('${grant.name}', '${grant.organisation}')">⚠️ Report Link</button>
         </div>
       `;
       container.appendChild(card);
@@ -728,7 +748,18 @@
       document.getElementById('draftText').textContent = 'Sorry, something went wrong. Please try again.';
     }
   }
-
+async function reportGrant(grantName, organisation) {
+  try {
+    await fetch('/report-grant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ grantName, organisation })
+    });
+    alert('Thank you — we have flagged this grant for review and will update it shortly.');
+  } catch (err) {
+    alert('Sorry, something went wrong. Please email hello@theosfight.co.uk to report this grant.');
+  }
+}
   function closeModal(e) {
     if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
   }
