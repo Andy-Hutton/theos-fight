@@ -20,6 +20,14 @@
             "dest": "server.js"
         },
         {
+            "src": "/report-grant",
+            "dest": "server.js"
+        },
+        {
+            "src": "/submit-feedback",
+            "dest": "server.js"
+        },
+        {
             "src": "/(.*)",
             "dest": "public/$1"
         }
