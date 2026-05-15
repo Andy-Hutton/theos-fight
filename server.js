@@ -7,6 +7,7 @@ const xss = require('xss');
 require('dotenv').config();
 const app = express();
 const client = new Anthropic();
+const nodemailer = require('nodemailer');
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -163,6 +164,7 @@ app.post('/report-grant', (req, res) => {
   console.log(`⚠️ GRANT REPORTED: ${grantName} by ${organisation} - ${new Date().toISOString()}`);
   res.json({ success: true });
 });
+
 app.post('/submit-feedback', async (req, res) => {
   const name = sanitiseText(req.body.name, 50) || 'Anonymous';
   const location = sanitiseText(req.body.location, 100);
@@ -174,17 +176,56 @@ app.post('/submit-feedback', async (req, res) => {
     return res.status(400).json({ success: false });
   }
 
-  console.log(`
-⭐ NEW FEEDBACK SUBMISSION
-Name: ${name}
-Location: ${location}
-Equipment: ${equipment}
-Rating: ${rating}/5
-Experience: ${experience}
-Date: ${new Date().toISOString()}
-  `);
+  const stars = '⭐'.repeat(rating);
 
-  res.json({ success: true });
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    transporter.verify(function(error, success) {
+      if (error) {
+        console.error('SMTP Error:', error);
+      } else {
+        console.log('SMTP connection verified');
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: 'hello@theosfight.co.uk',
+      subject: `⭐ New Theo's Fight feedback from ${name}`,
+      text: `
+NEW FEEDBACK SUBMISSION
+=======================
+Name: ${name}
+Location: ${location || 'Not provided'}
+Equipment: ${equipment || 'Not provided'}
+Rating: ${stars} (${rating}/5)
+Date: ${new Date().toLocaleString('en-GB')}
+
+Their experience:
+${experience}
+
+=======================
+To approve and add to the Stories page, copy the above into testimonials.html
+      `
+    });
+
+    console.log(`⭐ Feedback received from ${name} and emailed`);
+    res.json({ success: true });
+
+  } catch (error) {
+    console.error('Feedback email error:', error.message);
+    console.log(`⭐ Feedback from ${name}: ${experience}`);
+    res.json({ success: true });
+  }
 });
 app.post('/submit-feedback', async (req, res) => {
   const name = sanitiseText(req.body.name, 50) || 'Anonymous';
@@ -197,40 +238,56 @@ app.post('/submit-feedback', async (req, res) => {
     return res.status(400).json({ success: false });
   }
 
-  console.log(`
-⭐ NEW FEEDBACK SUBMISSION
+  const stars = '⭐'.repeat(rating);
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    transporter.verify(function(error, success) {
+      if (error) {
+        console.error('SMTP Error:', error);
+      } else {
+        console.log('SMTP connection verified');
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: 'hello@theosfight.co.uk',
+      subject: `⭐ New Theo's Fight feedback from ${name}`,
+      text: `
+NEW FEEDBACK SUBMISSION
+=======================
 Name: ${name}
-Location: ${location}
-Equipment: ${equipment}
-Rating: ${rating}/5
-Experience: ${experience}
-Date: ${new Date().toISOString()}
-  `);
+Location: ${location || 'Not provided'}
+Equipment: ${equipment || 'Not provided'}
+Rating: ${stars} (${rating}/5)
+Date: ${new Date().toLocaleString('en-GB')}
 
-  res.json({ success: true });
-});
-app.post('/submit-feedback', async (req, res) => {
-  const name = sanitiseText(req.body.name, 50) || 'Anonymous';
-  const location = sanitiseText(req.body.location, 100);
-  const equipment = sanitiseText(req.body.equipment, 200);
-  const experience = sanitiseText(req.body.experience, 1000);
-  const rating = parseInt(req.body.rating) || 0;
+Their experience:
+${experience}
 
-  if (!experience) {
-    return res.status(400).json({ success: false });
+=======================
+To approve and add to the Stories page, copy the above into testimonials.html
+      `
+    });
+
+    console.log(`⭐ Feedback received from ${name} and emailed`);
+    res.json({ success: true });
+
+  } catch (error) {
+    console.error('Feedback email error:', error.message);
+    console.log(`⭐ Feedback from ${name}: ${experience}`);
+    res.json({ success: true });
   }
-
-  console.log(`
-⭐ NEW FEEDBACK SUBMISSION
-Name: ${name}
-Location: ${location}
-Equipment: ${equipment}
-Rating: ${rating}/5
-Experience: ${experience}
-Date: ${new Date().toISOString()}
-  `);
-
-  res.json({ success: true });
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
