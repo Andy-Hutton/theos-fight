@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Guides and Advice for Families | Theo's Fight</title>
+<meta name="description" content="Honest, practical guides for UK families of children with additional needs — written by a dad who's been there. Grant application tips, equipment funding advice and more.">
+<link rel="canonical" href="https://theosfight.co.uk/blog/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"></noscript>
+<style>
+  :root {
+    --sky: #e0f4fd;
+    --sky-mid: #b8e4f7;
+    --sky-deep: #7cc8ef;
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --navy: #0d3d5e;
+    --white: #ffffff;
+    --soft: #f4fafd;
+    --text: #1a3a4f;
+    --muted: #5a8fa8;
+    --red: #e03b1f;
+    --card-shadow: 0 4px 24px rgba(42,159,214,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--soft); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 60%, var(--blue) 100%);
+    padding: 0; position: relative; overflow: hidden;
+  }
+
+  header::before {
+    content: ''; position: absolute; top: -60px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(124,200,239,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px; margin: 0 auto; padding: 32px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; position: relative; z-index: 1;
+  }
+
+  .logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .logo-monkey { width: 44px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+  .logo-text { font-size: 1.8rem; font-weight: 900; color: white; }
+  .logo-text span { color: #7cc8ef; }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    color: white; font-family: 'Nunito', sans-serif; font-size: 0.85rem;
+    font-weight: 700; padding: 8px 16px; border-radius: 8px;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .nav-bar { background: var(--white); border-bottom: 2px solid var(--sky-mid); }
+  .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; }
+  .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 14px 16px; font-size: 0.85rem; font-weight: 800; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  .nav-link:hover { color: var(--blue); border-bottom-color: var(--sky-deep); }
+  .nav-link.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; }
+
+  .page-header { margin-bottom: 40px; }
+  .page-title { font-size: 2rem; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .page-subtitle { font-size: 0.95rem; color: var(--muted); line-height: 1.65; max-width: 560px; }
+
+  .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  .article-card {
+    background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow);
+    padding: 28px; text-decoration: none; color: var(--text);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-top: 4px solid var(--blue); display: flex; flex-direction: column;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(42,159,214,0.18); }
+  .article-card:nth-child(2) { border-top-color: var(--red); animation-delay: 0.08s; }
+  .article-card:nth-child(3) { border-top-color: #f9a826; animation-delay: 0.16s; }
+
+  .card-tag { display: inline-block; background: var(--sky); color: var(--blue-dark); font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .card-title { font-size: 1.1rem; font-weight: 900; color: var(--navy); line-height: 1.3; margin-bottom: 10px; }
+  .card-excerpt { font-size: 0.88rem; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 16px; font-family: 'Lora', serif; font-style: italic; }
+  .card-read { font-size: 0.82rem; font-weight: 800; color: var(--blue); }
+
+  .cta-strip {
+    background: linear-gradient(135deg, var(--navy), var(--blue-dark));
+    border-radius: 16px; padding: 28px 32px; text-align: center; margin-top: 40px;
+  }
+  .cta-strip h3 { font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 8px; }
+  .cta-strip p { font-size: 0.88rem; color: rgba(255,255,255,0.75); margin-bottom: 18px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--red) 0%, #c0321a 100%);
+    color: white; font-family: 'Nunito', sans-serif; font-size: 0.95rem;
+    font-weight: 800; padding: 12px 28px; border: none; border-radius: 12px;
+    cursor: pointer; text-decoration: none; transition: transform 0.15s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.55);
+    text-align: center; padding: 28px 24px; font-size: 0.82rem; line-height: 1.8;
+  }
+  .footer-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .footer-monkey { width: 44px; height: auto; opacity: 0.85; }
+  footer strong { color: rgba(255,255,255,0.88); }
+  .heart { color: #e74c7c; }
+  footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  footer a:hover { color: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo-wrap">
+      <img src="/monkey.webp" alt="Theo's Fight" class="logo-monkey" width="44" height="44" />
+      <div class="logo-text">Theo's <span>Fight</span></div>
+    </a>
+    <a href="/" class="back-btn">← Back to Grant Finder</a>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a href="/" class="nav-link">🔍 Grant Finder</a>
+    <a href="/about.html" class="nav-link">💙 About</a>
+    <a href="/blog/" class="nav-link active">📝 Blog</a>
+    <a href="/feedback.html" class="nav-link">⭐ Share Your Experience</a>
+    <a href="/testimonials.html" class="nav-link">💬 Stories</a>
+    <a href="/contact.html" class="nav-link">📧 Contact</a>
+    <a href="/privacy.html" class="nav-link">🔒 Privacy</a>
+  </div>
+</nav>
+
+<main>
+
+  <div class="page-header">
+    <h1 class="page-title">📝 Guides and advice for families</h1>
+    <p class="page-subtitle">Honest, practical articles from a dad who's been there — on finding grants, writing applications, and navigating the system without losing your mind.</p>
+  </div>
+
+  <div class="articles-grid">
+
+    <a href="/blog/wheelchair-grants-uk.html" class="article-card">
+      <span class="card-tag">🦽 Wheelchair Funding</span>
+      <div class="card-title">How to apply for a wheelchair grant for your child in the UK</div>
+      <div class="card-excerpt">A practical, honest guide covering the NHS route, what grants are available, and how to write an application that actually lands.</div>
+      <div class="card-read">Read article →</div>
+    </a>
+
+    <!-- More articles will appear here as they are published -->
+
+  </div>
+
+  <div class="cta-strip">
+    <h3>Ready to search for grants?</h3>
+    <p>Pop in your child's details and we'll find grants that match your situation — then help you write the application letter.</p>
+    <a href="/" class="btn-primary">🔍 Search for Grants</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <img src="/monkey.webp" alt="" class="footer-monkey" width="44" height="44" />
+    <div>
+      <strong>Theo's Fight</strong> — Built with love to help families access the equipment their children deserve.<br>
+      Free to use, always &nbsp;·&nbsp; Made in the UK <span class="heart">♥</span> &nbsp;·&nbsp;
+      <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+      <a href="/contact.html">Contact</a> &nbsp;·&nbsp;
+      <a href="/about.html">About</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
