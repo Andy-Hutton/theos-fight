@@ -19,6 +19,9 @@
 <meta property="og:url" content="https://theosfight.co.uk">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://theosfight.co.uk/">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0d3d5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -792,6 +795,12 @@ async function reportGrant(grantName, organisation) {
     }
   });
 </script>
-
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
 </body>
 </html>

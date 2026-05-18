@@ -1,0 +1,22 @@
+{
+    "name": "Theo's Fight",
+    "short_name": "Theo's Fight",
+    "description": "Free equipment grant finder for children with additional needs",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0d3d5e",
+    "theme_color": "#0d3d5e",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/monkey.webp",
+            "sizes": "192x192",
+            "type": "image/webp"
+        },
+        {
+            "src": "/monkey.webp",
+            "sizes": "512x512",
+            "type": "image/webp"
+        }
+    ]
+}
