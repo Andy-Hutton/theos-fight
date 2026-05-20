@@ -15,10 +15,10 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
       fontSrc: ["'self'", "fonts.gstatic.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://sibforms.com"],
       scriptSrcAttr: ["'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "api.qrserver.com"],
-      connectSrc: ["'self'"]
+      connectSrc: ["'self'", "https://sibforms.com", "https://d98e95d1.sibforms.com"]
     }
   }
 }));
