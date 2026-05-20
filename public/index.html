@@ -575,6 +575,30 @@
   </div>
 
 </main>
+<div class="modal-overlay" id="subscribeOverlay" onclick="closeSubscribe(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">💙 Stay updated with Theo's Fight</div>
+      <button class="modal-close" onclick="closeSubscribeDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.92rem;color:var(--muted);margin-bottom:20px;line-height:1.6;">We'll let you know when new grants are added. No spam, ever.</p>
+      <form id="sib-form" method="POST" action="https://d98e95d1.sibforms.com/serve/MUIFAHjH6araOdA5N3snYyLjsxvUoHNQ3uVYOkvhP8xMAjVN2cHqinaVyRY-xoNGTR8EQFtNAQKtDJ_nId7GL-_fE6kj2Dx1D4jWGboPlPSlshQFENwSKi3nQJvyNfU-TePHvX3Jbx-LiwoiaZw2dZ2Kex9VUi28SayGSlW-Eyre5X1ao92eC0Uro41JFllsUQgXDtJEk3rVD2i0Hg==" data-type="subscription">
+        <div class="form-group" style="margin-bottom:16px;">
+          <input type="text" id="SUBSCRIBE_EMAIL" name="EMAIL" placeholder="Your email address" autocomplete="off" required />
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;">
+          <input type="checkbox" id="SUBSCRIBE_GDPR" name="GDPR" value="1" required style="width:18px;height:18px;margin-top:2px;flex-shrink:0;" />
+          <label for="SUBSCRIBE_GDPR" style="font-size:0.82rem;color:var(--text);line-height:1.55;">I'd like to receive occasional grant updates from Theo's Fight. I can unsubscribe at any time.</label>
+        </div>
+        <input type="text" name="email_address_check" value="" class="input--hidden">
+        <input type="hidden" name="locale" value="en">
+        <button type="submit" class="btn-primary" style="width:100%;">Keep me updated 💙</button>
+      </form>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:12px;text-align:center;">We use Brevo to manage subscriptions. <a href="/privacy.html" style="color:var(--blue);">Privacy policy</a></p>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
@@ -604,79 +628,7 @@
     </div>
   </div>
 </div>
-<div style="max-width:540px; margin:40px auto; padding:0 24px;">
-  <div class="sib-form" style="text-align:center; background-color:#EFF2F7;">
-    <div id="sib-form-container" class="sib-form-container">
-      <div id="error-message" class="sib-form-message-panel" style="font-family:Nunito,sans-serif; font-size:16px; text-align:left; color:#661d1d; background-color:#ffeded; border-color:#ff4949; border-radius:3px; max-width:540px;">
-        <div class="sib-form-message-panel__text sib-form-message-panel__text--center">
-          <span class="sib-form-message-panel__inner-text">Your subscription could not be saved. Please try again.</span>
-        </div>
-      </div>
-      <div id="success-message" class="sib-form-message-panel" style="font-family:Nunito,sans-serif; font-size:16px; text-align:left; color:#085229; background-color:#e7faf0; border-color:#13ce66; border-radius:3px; max-width:540px;">
-        <div class="sib-form-message-panel__text sib-form-message-panel__text--center">
-          <span class="sib-form-message-panel__inner-text">Your subscription has been successful. 💙</span>
-        </div>
-      </div>
-      <div id="sib-container" class="sib-container--large sib-container--vertical" style="max-width:540px; text-align:center; background-color:rgba(255,255,255,1); border-width:1px; border-style:solid; border-color:#C0CCD9; border-radius:3px; direction:ltr">
-        <form id="sib-form" method="POST" action="https://d98e95d1.sibforms.com/serve/MUIFAHjH6araOdA5N3snYyLjsxvUoHNQ3uVYOkvhP8xMAjVN2cHqinaVyRY-xoNGTR8EQFtNAQKtDJ_nId7GL-_fE6kj2Dx1D4jWGboPlPSlshQFENwSKi3nQJvyNfU-TePHvX3Jbx-LiwoiaZw2dZ2Kex9VUi28SayGSlW-Eyre5X1ao92eC0Uro41JFllsUQgXDtJEk3rVD2i0Hg==" data-type="subscription">
-          <div style="padding:8px 0;">
-            <div class="sib-form-block" style="font-family:Nunito,sans-serif; font-size:28px; font-weight:800; text-align:center; color:#0d3d5e;">
-              <p>Stay updated with Theo's Fight</p>
-            </div>
-          </div>
-          <div style="padding:8px 0;">
-            <div class="sib-form-block" style="font-family:Nunito,sans-serif; font-size:15px; text-align:center; color:#5a8fa8;">
-              <p>We'll let you know when new grants are added. No spam, ever. 💙</p>
-            </div>
-          </div>
-          <div style="padding:8px 0;">
-            <div class="sib-input sib-form-block">
-              <div class="form__entry entry_block">
-                <div class="form__label-row">
-                  <div class="entry__field">
-                    <input class="input" type="text" id="EMAIL" name="EMAIL" autocomplete="off" placeholder="Your email address" data-required="true" required />
-                  </div>
-                </div>
-                <label class="entry__error entry__error--primary" style="font-family:Nunito,sans-serif; font-size:14px; color:#661d1d; background-color:#ffeded; border-color:#ff4949; border-radius:3px;"></label>
-              </div>
-            </div>
-          </div>
-          <div style="padding:8px 0;">
-            <div class="sib-optin sib-form-block" data-required="true">
-              <div class="form__entry entry_mcq">
-                <div class="form__label-row">
-                  <div class="entry__choice">
-                    <label>
-                      <input type="checkbox" class="input_replaced" value="1" id="GDPR" name="GDPR" required />
-                      <span class="checkbox checkbox_tick_positive"></span>
-                      <span style="font-family:Nunito,sans-serif; font-size:13px; color:#1a3a4f;">I'd like to receive occasional grant updates from Theo's Fight. I can unsubscribe at any time.</span>
-                    </label>
-                  </div>
-                </div>
-                <label class="entry__error entry__error--primary" style="font-family:Nunito,sans-serif; font-size:14px; color:#661d1d; background-color:#ffeded; border-color:#ff4949; border-radius:3px;"></label>
-              </div>
-            </div>
-          </div>
-          <div style="padding:8px 0;">
-            <div class="sib-form-block" style="text-align:center;">
-              <button class="sib-form-block__button sib-form-block__button-with-loader" style="font-family:Nunito,sans-serif; font-size:16px; font-weight:800; text-align:center; color:#FFFFFF; background-color:#2a9fd6; border-width:0px; border-radius:8px; padding:12px 28px;" form="sib-form" type="submit">
-                Keep me updated 💙
-              </button>
-            </div>
-          </div>
-          <div style="padding:8px 0;">
-            <div style="font-family:Nunito,sans-serif; font-size:12px; text-align:center; color:#687484;">
-              <p>We use Brevo as our marketing platform. By submitting this form you agree that the personal data you provided will be transferred to Brevo for processing in accordance with <a href="https://www.brevo.com/en/legal/privacypolicy/" rel="nofollow">Brevo's Privacy Policy.</a></p>
-            </div>
-          </div>
-          <input type="text" name="email_address_check" value="" class="input--hidden">
-          <input type="hidden" name="locale" value="en">
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<footer>
+
   <div class="footer-inner">
     <img src="/monkey.webp" alt="Theo's Fight mascot" class="footer-monkey" width="48" height="48" />
     <div>
@@ -915,10 +867,26 @@ async function reportGrant(grantName, organisation) {
     if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
   }
 
-  function closeModalDirect() {
+ 
+function closeModalDirect() {
     document.getElementById('modalOverlay').classList.remove('visible');
   }
 
+  function closeSubscribe(e) {
+    if (e.target === document.getElementById('subscribeOverlay')) closeSubscribeDirect();
+  }
+
+  function closeSubscribeDirect() {
+    document.getElementById('subscribeOverlay').classList.remove('visible');
+    sessionStorage.setItem('subscribe-shown', 'true');
+  }
+
+  function showSubscribeModal() {
+    if (sessionStorage.getItem('subscribe-shown')) return;
+    setTimeout(() => {
+      document.getElementById('subscribeOverlay').classList.add('visible');
+    }, 1500);
+  }
   function copyDraft() {
     const text = document.getElementById('draftText').textContent;
     navigator.clipboard.writeText(text).then(() => {
