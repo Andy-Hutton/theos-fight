@@ -18,7 +18,8 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://sibforms.com"],
       scriptSrcAttr: ["'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "api.qrserver.com"],
-      connectSrc: ["'self'", "https://sibforms.com", "https://d98e95d1.sibforms.com"]
+      connectSrc: ["'self'", "https://sibforms.com", "https://d98e95d1.sibforms.com"],
+      frameSrc: ["'self'", "https://sibforms.com", "https://d98e95d1.sibforms.com"],
     }
   }
 }));
