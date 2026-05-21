@@ -582,7 +582,7 @@
       <button class="modal-close" onclick="closeSubscribeDirect()">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:0.92rem;color:var(--muted);margin-bottom:20px;line-height:1.6;">We'll let you know when new grants are added. No spam, ever.</p><form id="sib-form" method="POST" action="https://d98e95d1.sibforms.com/serve/MUIFAHjH6araOdA5N3snYyLjsxvUoHNQ3uVYOkvhP8xMAjVN2cHqinaVyRY-xoNGTR8EQFtNAQKtDJ_nId7GL-_fE6kj2Dx1D4jWGboPlPSlshQFENwSKi3nQJvyNfU-TePHvX3Jbx-LiwoiaZw2dZ2Kex9VUi28SayGSlW-Eyre5X1ao92eC0Uro41JFllsUQgXDtJEk3rVD2i0Hg==" data-type="subscription" onsubmit="handleSubscribeSubmit()">
+      <p style="font-size:0.92rem;color:var(--muted);margin-bottom:20px;line-height:1.6;">We'll let you know when new grants are added. No spam, ever.</p><form id="sib-form" method="POST" action="https://d98e95d1.sibforms.com/serve/MUIFAHjH6araOdA5N3snYyLjsxvUoHNQ3uVYOkvhP8xMAjVN2cHqinaVyRY-xoNGTR8EQFtNAQKtDJ_nId7GL-_fE6kj2Dx1D4jWGboPlPSlshQFENwSKi3nQJvyNfU-TePHvX3Jbx-LiwoiaZw2dZ2Kex9VUi28SayGSlW-Eyre5X1ao92eC0Uro41JFllsUQgXDtJEk3rVD2i0Hg==" data-type="subscription" onsubmit="handleSubscribeSubmit(event)">
         <div class="form-group" style="margin-bottom:16px;">
           <input type="text" id="SUBSCRIBE_EMAIL" name="EMAIL" placeholder="Your email address" autocomplete="off" required />
         </div>
@@ -678,12 +678,29 @@
     const location = document.getElementById('location').value.trim();
     return name && age && diagnosis && location;
   }
-  function handleSubscribeSubmit() {
-  setTimeout(() => {
-    document.getElementById('sib-form').style.display = 'none';
-    document.getElementById('subscribeSuccess').style.display = 'block';
-    setTimeout(() => closeSubscribeDirect(), 3000);
-  }, 1000);
+async function handleSubscribeSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById('SUBSCRIBE_EMAIL').value;
+  const gdpr = document.getElementById('SUBSCRIBE_GDPR').checked;
+  
+  if (!email || !gdpr) return;
+
+  try {
+    const form = document.getElementById('sib-form');
+    const formData = new FormData(form);
+    
+    await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      mode: 'no-cors'
+    });
+  } catch(err) {
+    // no-cors means we can't read the response but it still submits
+  }
+
+  document.getElementById('sib-form').style.display = 'none';
+  document.getElementById('subscribeSuccess').style.display = 'block';
+  setTimeout(() => closeSubscribeDirect(), 3000);
 }
 
   async function startSearch() {
