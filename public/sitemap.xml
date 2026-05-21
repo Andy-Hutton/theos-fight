@@ -20,4 +20,44 @@
     <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
+  <url>
+    <loc>https://theosfight.co.uk/feedback.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/testimonials.html</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/blog/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/blog/wheelchair-grants-uk.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/blog/cerebral-palsy-equipment-grants.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/blog/aac-communication-device-funding-children-uk.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/blog/family-fund-application-tips.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://theosfight.co.uk/blog/what-equipment-can-disability-grants-fund.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
 </urlset>
