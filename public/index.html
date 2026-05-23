@@ -754,11 +754,11 @@ async function handleSubscribeSubmit(e) {
     // Progress bar animation
 let progress = 0;
 const progressInterval = setInterval(() => {
-  progress += Math.random() * 8;
-  if (progress > 88) progress = 88;
+  progress += Math.random() * 5;
+  if (progress > 99) progress = 99;
   document.getElementById('progressBar').style.width = progress + '%';
   document.getElementById('progressPct').textContent = Math.round(progress) + '%';
-}, 600);
+}, 400);
     const loadingSteps = ['ls1','ls2','ls3','ls4','ls5'];
     let i = 0;
     const interval = setInterval(() => {
