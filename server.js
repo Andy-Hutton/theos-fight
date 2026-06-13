@@ -7,6 +7,12 @@ const xss = require('xss');
 require('dotenv').config();
 const app = express();
 const client = new Anthropic();
+const searchCache = new Map();
+const CACHE_TTL = 24 * 60 * 60 * 1000;
+
+function makeCacheKey(diagnosis, location, equipment) {
+  return [diagnosis, location, ...equipment.slice().sort()].join('|').toLowerCase();
+}
 const nodemailer = require('nodemailer');
 
 app.use(helmet({
@@ -106,6 +112,12 @@ app.post('/search-grants', searchLimiter, async (req, res) => {
     : [];
   const context = sanitiseText(req.body.context, 500);
 
+  const cacheKey = makeCacheKey(diagnosis, location, equipment);
+  const cached = searchCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return res.json({ success: true, grants: cached.grants });
+  }
+
   try {
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
@@ -118,6 +130,7 @@ app.post('/search-grants', searchLimiter, async (req, res) => {
 
     const grants = parseGrantsFromResponse(message.content[0].text);
 const validatedGrants = await validateGrantUrls(grants);
+searchCache.set(cacheKey, { grants: validatedGrants, timestamp: Date.now() });
 res.json({ success: true, grants: validatedGrants });
 
   } catch (error) {
@@ -166,68 +179,6 @@ app.post('/report-grant', (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/submit-feedback', async (req, res) => {
-  const name = sanitiseText(req.body.name, 50) || 'Anonymous';
-  const location = sanitiseText(req.body.location, 100);
-  const equipment = sanitiseText(req.body.equipment, 200);
-  const experience = sanitiseText(req.body.experience, 1000);
-  const rating = parseInt(req.body.rating) || 0;
-
-  if (!experience) {
-    return res.status(400).json({ success: false });
-  }
-
-  const stars = '⭐'.repeat(rating);
-
-  try {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-
-    transporter.verify(function(error, success) {
-      if (error) {
-        console.error('SMTP Error:', error);
-      } else {
-        console.log('SMTP connection verified');
-      }
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: 'hello@theosfight.co.uk',
-      subject: `⭐ New Theo's Fight feedback from ${name}`,
-      text: `
-NEW FEEDBACK SUBMISSION
-=======================
-Name: ${name}
-Location: ${location || 'Not provided'}
-Equipment: ${equipment || 'Not provided'}
-Rating: ${stars} (${rating}/5)
-Date: ${new Date().toLocaleString('en-GB')}
-
-Their experience:
-${experience}
-
-=======================
-To approve and add to the Stories page, copy the above into testimonials.html
-      `
-    });
-
-    console.log(`⭐ Feedback received from ${name} and emailed`);
-    res.json({ success: true });
-
-  } catch (error) {
-    console.error('Feedback email error:', error.message);
-    console.log(`⭐ Feedback from ${name}: ${experience}`);
-    res.json({ success: true });
-  }
-});
 app.post('/submit-feedback', async (req, res) => {
   const name = sanitiseText(req.body.name, 50) || 'Anonymous';
   const location = sanitiseText(req.body.location, 100);
