@@ -4,6 +4,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 const app = express();
 const client = new Anthropic();
@@ -13,7 +14,6 @@ const CACHE_TTL = 24 * 60 * 60 * 1000;
 function makeCacheKey(diagnosis, location, equipment) {
   return [diagnosis, location, ...equipment.slice().sort()].join('|').toLowerCase();
 }
-const nodemailer = require('nodemailer');
 
 app.use(helmet({
   contentSecurityPolicy: {
