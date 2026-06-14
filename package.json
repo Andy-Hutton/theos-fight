@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Andy-Hutton/theos-fight#readme",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
+    "@supabase/supabase-js": "^2.108.1",
     "anthropic": "^0.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

@@ -5,9 +5,11 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss');
 const nodemailer = require('nodemailer');
+const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 const app = express();
 const client = new Anthropic();
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 const searchCache = new Map();
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 
@@ -90,6 +92,21 @@ async function validateGrantUrls(grants) {
   return validatedGrants;
 }
 
+async function captureGrantsToSupabase(grants) {
+  for (const grant of grants) {
+    await supabase.from('grants').upsert({
+      name: grant.name,
+      organisation: grant.organisation,
+      description: grant.description || null,
+      amount: grant.amount || null,
+      url: grant.url || null,
+      email: grant.email || null,
+      tags: grant.tags || [],
+      eligibility: grant.eligibility || null,
+    }, { onConflict: 'name,organisation', ignoreDuplicates: true });
+  }
+}
+
 function extractBaseUrl(url) {
   try {
     const parsed = new URL(url);
@@ -131,6 +148,7 @@ app.post('/search-grants', searchLimiter, async (req, res) => {
     const grants = parseGrantsFromResponse(message.content[0].text);
 const validatedGrants = await validateGrantUrls(grants);
 searchCache.set(cacheKey, { grants: validatedGrants, timestamp: Date.now() });
+captureGrantsToSupabase(validatedGrants).catch(err => console.error('Supabase capture:', err.message));
 res.json({ success: true, grants: validatedGrants });
 
   } catch (error) {
