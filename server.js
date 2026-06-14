@@ -314,6 +314,7 @@ app.get('/admin', (req, res) => {
 <script>
   let key = '';
   let allGrants = [];
+  let grantsMap = {};
   let currentFilter = 'all';
 
   function login() {
@@ -324,6 +325,7 @@ app.get('/admin', (req, res) => {
         document.getElementById('gate').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         allGrants = data.grants;
+        allGrants.forEach(g => grantsMap[g.id] = g);
         renderStats();
         renderGrants();
       })
@@ -383,7 +385,7 @@ app.get('/admin', (req, res) => {
         </div>
         <div class="actions">
           \${!g.verified ? '<button class="btn btn-sm btn-success" onclick="verify(\'' + g.id + '\')">✅ Verify</button>' : '<button class="btn btn-sm btn-outline" onclick="unverify(\'' + g.id + '\')">↩ Unverify</button>'}
-          <button class="btn btn-sm btn-outline" onclick="openEdit(\${JSON.stringify(g).replace(/"/g, '&quot;')})">✏️ Edit</button>
+          <button class="btn btn-sm btn-outline" onclick="openEdit('\${g.id}')">✏️ Edit</button>
           <button class="btn btn-sm btn-danger" onclick="remove('\${g.id}')">🗑️ Remove</button>
         </div>
       </div>
@@ -416,7 +418,9 @@ app.get('/admin', (req, res) => {
     renderStats(); renderGrants();
   }
 
-  function openEdit(grant) {
+  function openEdit(id) {
+    const grant = grantsMap[id];
+    if (!grant) return;
     document.getElementById('editId').value = grant.id;
     document.getElementById('editName').value = grant.name || '';
     document.getElementById('editOrg').value = grant.organisation || '';
@@ -445,7 +449,7 @@ app.get('/admin', (req, res) => {
     };
     await patchGrant(id, updates);
     const idx = allGrants.findIndex(g => g.id === id);
-    if (idx > -1) allGrants[idx] = { ...allGrants[idx], ...updates };
+    if (idx > -1) { allGrants[idx] = { ...allGrants[idx], ...updates }; grantsMap[id] = allGrants[idx]; }
     closeEdit(); renderGrants();
   }
 
