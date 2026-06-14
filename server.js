@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const xss = require('xss');
 const nodemailer = require('nodemailer');
 const { createClient } = require('@supabase/supabase-js');
+const fs = require('fs');
 require('dotenv').config();
 const app = express();
 const client = new Anthropic();
@@ -197,6 +198,213 @@ function adminAuth(req, res, next) {
 }
 
 app.get('/admin', (req, res) => {
+  res.send(fs.readFileSync('./admin-template.html', 'utf8'));
+});
+
+ss');
+const Anthropic = require('@anthropic-ai/sdk');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const xss = require('xss');
+const nodemailer = require('nodemailer');
+const { createClient } = require('@supabase/supabase-js');
+const fs = require('fs');
+require('dotenv').config();
+const app = express();
+const client = new Anthropic();
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const searchCache = new Map();
+const CACHE_TTL = 24 * 60 * 60 * 1000;
+
+function makeCacheKey(diagnosis, location, equipment) {
+  return [diagnosis, location, ...equipment.slice().sort()].join('|').toLowerCase();
+}
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+      fontSrc: ["'self'", "fonts.gstatic.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://sibforms.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "api.qrserver.com"],
+      connectSrc: ["'self'", "https://sibforms.com", "https://d98e95d1.sibforms.com"],
+      frameSrc: ["'self'", "https://sibforms.com", "https://d98e95d1.sibforms.com"],
+    }
+  }
+}));
+
+const searchLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Too many searches. Please wait a few minutes and try again.' }
+});
+
+const draftLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { success: false, error: 'Too many requests. Please wait a few minutes and try again.' }
+});
+
+app.use(cors());
+app.use(express.json({ limit: '10kb' }));
+app.use(express.static('public'));
+
+function sanitiseText(text, maxLength = 500) {
+  if (!text || typeof text !== 'string') return '';
+  return xss(text.trim().slice(0, maxLength));
+}
+
+function validateRequest(body) {
+  const { childName, childAge, diagnosis, location } = body;
+  if (!childName || !childAge || !diagnosis || !location) return false;
+  if (typeof childName !== 'string' || typeof diagnosis !== 'string' || typeof location !== 'string') return false;
+  return true;
+}
+
+function parseGrantsFromResponse(text) {
+  const cleaned = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(cleaned);
+}
+
+async function validateGrantUrls(grants) {
+  const validatedGrants = await Promise.all(grants.map(async (grant) => {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(grant.url, {
+        method: 'HEAD',
+        signal: controller.signal,
+        redirect: 'follow'
+      });
+      
+      clearTimeout(timeout);
+      
+      if (response.ok || response.status === 405) {
+        return { ...grant, urlVerified: true };
+      } else {
+        return { ...grant, url: extractBaseUrl(grant.url), urlVerified: false };
+      }
+    } catch (err) {
+      return { ...grant, url: extractBaseUrl(grant.url), urlVerified: false };
+    }
+  }));
+  
+  return validatedGrants;
+}
+
+async function captureGrantsToSupabase(grants) {
+  for (const grant of grants) {
+    await supabase.from('grants').upsert({
+      name: grant.name,
+      organisation: grant.organisation,
+      description: grant.description || null,
+      amount: grant.amount || null,
+      url: grant.url || null,
+      email: grant.email || null,
+      tags: grant.tags || [],
+      eligibility: grant.eligibility || null,
+    }, { onConflict: 'name,organisation', ignoreDuplicates: true });
+  }
+}
+
+function extractBaseUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.origin;
+  } catch {
+    return url;
+  }
+}
+app.post('/search-grants', searchLimiter, async (req, res) => {
+  if (!validateRequest(req.body)) {
+    return res.status(400).json({ success: false, error: 'Please fill in all required fields.' });
+  }
+
+  const childName = sanitiseText(req.body.childName, 50);
+  const childAge = sanitiseText(req.body.childAge, 10);
+  const diagnosis = sanitiseText(req.body.diagnosis, 200);
+  const location = sanitiseText(req.body.location, 100);
+  const equipment = Array.isArray(req.body.equipment)
+    ? req.body.equipment.slice(0, 10).map(e => sanitiseText(e, 50))
+    : [];
+  const context = sanitiseText(req.body.context, 500);
+
+  const cacheKey = makeCacheKey(diagnosis, location, equipment);
+  const cached = searchCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return res.json({ success: true, grants: cached.grants });
+  }
+
+  try {
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2000,
+      messages: [{
+        role: 'user',
+        content: `You are a UK grant specialist helping families with disabled children find financial support for specialist equipment. Search for real UK grants for this family. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}. Additional context: ${context || 'None provided'}. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Organisation name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "applications@example.org"}] Only use stable homepage or main section URLs for reputable UK organisations. Never use deep links or specific campaign pages that may change.`
+      }]
+    });
+
+    const grants = parseGrantsFromResponse(message.content[0].text);
+const validatedGrants = await validateGrantUrls(grants);
+searchCache.set(cacheKey, { grants: validatedGrants, timestamp: Date.now() });
+captureGrantsToSupabase(validatedGrants).catch(err => console.error('Supabase capture:', err.message));
+res.json({ success: true, grants: validatedGrants });
+
+  } catch (error) {
+    console.error('Search error:', error.message);
+    res.status(500).json({ success: false, error: 'Search failed. Please try again.' });
+  }
+});
+
+app.post('/draft-application', draftLimiter, async (req, res) => {
+  if (!validateRequest(req.body)) {
+    return res.status(400).json({ success: false, error: 'Missing required information.' });
+  }
+
+  const childName = sanitiseText(req.body.childName, 50);
+  const childAge = sanitiseText(req.body.childAge, 10);
+  const diagnosis = sanitiseText(req.body.diagnosis, 200);
+  const location = sanitiseText(req.body.location, 100);
+  const equipment = Array.isArray(req.body.equipment)
+    ? req.body.equipment.slice(0, 10).map(e => sanitiseText(e, 50))
+    : [];
+  const grantName = sanitiseText(req.body.grantName, 100);
+const organisation = sanitiseText(req.body.organisation, 100);
+const childDescription = sanitiseText(req.body.childDescription, 600);
+
+  try {
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      messages: [{
+        role: 'user',
+       content: `Write a heartfelt professional grant application letter for a UK family. Grant: ${grantName} by ${organisation}. Child name: ${childName}. Age: ${childAge}. Diagnosis: ${diagnosis}. Location: ${location}. Equipment needed: ${equipment.join(', ')}.About this child in the family's own words: ${childDescription || 'Not provided'}. IMPORTANT: Base all descriptions of the child entirely on what the family has told you above. Never assume abilities, emotions, or behaviours that have not been mentioned. If no description was provided, describe only the factual details given. Write a complete ready-to-send letter, warm and compelling. Use [PARENT NAME] as placeholder for parent name. Do not use any markdown formatting, asterisks, bold, or special characters in the letter. Plain text only. Format the letter for email - do not include a postal address header block. Start with the date on a single line, then a blank line, then the greeting. Keep it clean and modern..`
+      }]
+    });
+
+    res.json({ success: true, draft: message.content[0].text });
+
+  } catch (error) {
+    console.error('Draft error:', error.message);
+    res.status(500).json({ success: false, error: 'Could not generate letter. Please try again.' });
+  }
+});
+function adminAuth(req, res, next) {
+  if (!process.env.ADMIN_PASSWORD) return res.status(503).json({ error: 'Admin not configured' });
+  if (req.headers['x-admin-key'] !== process.env.ADMIN_PASSWORD) return res.status(401).json({ error: 'Unauthorised' });
+  next();
+}
+
+app.get('/admin', (req, res) => {
+  res.send(fs.readFileSync('./admin-template.html', 'utf8'));
+});
+
+app.get('/admin-REMOVE-THIS-WHOLE-BLOCK', (req, res) => {
   res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -464,6 +672,7 @@ app.get('/admin', (req, res) => {
 </body>
 </html>`);
 });
+// end of disabled admin route
 
 app.get('/admin/api/grants', adminAuth, async (req, res) => {
   const filter = req.query.filter;

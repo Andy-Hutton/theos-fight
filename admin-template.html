@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grant Admin — Theo's Fight</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:#f0f4f8;color:#1a2b3c;min-height:100vh;}
+  .gate{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  .gate-card{background:#fff;border-radius:12px;padding:40px;width:100%;max-width:360px;box-shadow:0 4px 24px rgba(0,0,0,0.1);}
+  .gate-title{font-size:1.3rem;font-weight:700;margin-bottom:6px;color:#0d1117;}
+  .gate-sub{font-size:0.85rem;color:#8a9aaa;margin-bottom:24px;}
+  input[type=password]{width:100%;padding:12px 14px;border:1.5px solid #d0dce8;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;margin-bottom:12px;}
+  input[type=password]:focus{border-color:#2a9fd6;}
+  .btn{padding:12px 20px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+  .btn-primary{background:#2a9fd6;color:#fff;width:100%;}
+  .btn-primary:hover{background:#1e87bf;}
+  .btn-sm{padding:7px 14px;font-size:0.8rem;}
+  .btn-success{background:#2ecc71;color:#fff;}
+  .btn-success:hover{background:#27ae60;}
+  .btn-outline{background:transparent;border:1.5px solid #d0dce8;color:#1a2b3c;}
+  .btn-outline:hover{border-color:#2a9fd6;color:#2a9fd6;}
+  .btn-danger{background:transparent;border:1.5px solid #ffb3b3;color:#e03b1f;}
+  .btn-danger:hover{background:#ffeaea;}
+  .err{color:#e03b1f;font-size:0.82rem;margin-top:8px;display:none;}
+  header{background:#0d1117;color:#fff;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+  header h1{font-size:1.1rem;font-weight:700;}
+  header span{color:#2a9fd6;}
+  .stats{display:flex;gap:16px;padding:20px 32px;background:#fff;border-bottom:1px solid #e8eef2;flex-wrap:wrap;}
+  .stat{text-align:center;padding:12px 24px;border-radius:8px;background:#f8fafc;border:1px solid #e8eef2;min-width:110px;}
+  .stat-num{font-size:1.8rem;font-weight:700;color:#0d1117;}
+  .stat-num.blue{color:#2a9fd6;}
+  .stat-num.green{color:#2ecc71;}
+  .stat-num.orange{color:#f39c12;}
+  .stat-label{font-size:0.75rem;color:#8a9aaa;text-transform:uppercase;letter-spacing:0.05em;}
+  .filters{padding:16px 32px;display:flex;gap:8px;}
+  .filter-btn{padding:8px 18px;border:1.5px solid #d0dce8;border-radius:20px;background:#fff;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:#5a7a8a;}
+  .filter-btn.active{background:#2a9fd6;border-color:#2a9fd6;color:#fff;}
+  .grants{padding:0 32px 32px;display:flex;flex-direction:column;gap:12px;}
+  .grant-row{background:#fff;border-radius:10px;padding:20px 24px;border:1px solid #e8eef2;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;}
+  .grant-name{font-size:0.95rem;font-weight:700;color:#0d1117;margin-bottom:2px;}
+  .grant-org{font-size:0.82rem;color:#5a7a8a;margin-bottom:8px;}
+  .grant-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:0.78rem;color:#8a9aaa;margin-bottom:8px;}
+  .grant-meta a{color:#2a9fd6;text-decoration:none;}
+  .grant-meta a:hover{text-decoration:underline;}
+  .grant-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+  .tag{background:#f0f6fb;color:#1a6fa0;font-size:0.72rem;font-weight:600;padding:2px 8px;border-radius:10px;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:0.72rem;font-weight:700;}
+  .badge-unverified{background:#fff8e6;color:#b07d00;}
+  .badge-verified{background:#eafaf1;color:#1a7a40;}
+  .actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center;padding:20px;}
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff;border-radius:12px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);}
+  .modal-head{padding:18px 24px;border-bottom:1px solid #e8eef2;display:flex;justify-content:space-between;align-items:center;}
+  .modal-head h2{font-size:1rem;font-weight:700;}
+  .modal-body{padding:24px;display:flex;flex-direction:column;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#5a7a8a;}
+  .field input,.field textarea{padding:10px 12px;border:1.5px solid #d0dce8;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;}
+  .field input:focus,.field textarea:focus{border-color:#2a9fd6;}
+  .field textarea{resize:vertical;min-height:80px;}
+  .modal-foot{padding:16px 24px;border-top:1px solid #e8eef2;display:flex;gap:8px;justify-content:flex-end;}
+  .loading{text-align:center;padding:48px;color:#8a9aaa;}
+  .empty{text-align:center;padding:48px;color:#8a9aaa;background:#fff;border-radius:10px;border:1px solid #e8eef2;}
+  #logoutBtn{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;}
+  #logoutBtn:hover{background:rgba(255,255,255,0.2);color:#fff;}
+  .notice{padding:10px 14px;border-radius:8px;font-size:0.85rem;font-weight:600;margin-bottom:0;}
+  .notice-err{background:#ffeaea;color:#c0392b;border:1px solid #ffb3b3;}
+  .notice-ok{background:#eafaf1;color:#1a7a40;border:1px solid #a3e4bc;}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-title">Theo's Fight <span style="color:#2a9fd6">Admin</span></div>
+    <div class="gate-sub">Grant review dashboard</div>
+    <input type="password" id="pwInput" placeholder="Password">
+    <button class="btn btn-primary" id="loginBtn">Log in</button>
+    <div class="err" id="pwErr">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
+  <header>
+    <h1>Theo's <span>Fight</span> — Grant Admin</h1>
+    <button id="logoutBtn">Log out</button>
+  </header>
+  <div class="stats" id="statsBar"></div>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="unverified">Unverified</button>
+    <button class="filter-btn" data-filter="verified">Verified</button>
+  </div>
+  <div class="grants" id="grantsList"><div class="loading">Loading grants...</div></div>
+</div>
+
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Edit Grant</h2>
+      <button class="btn btn-sm btn-outline" id="closeEditBtn">✕ Close</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="field"><label>Name</label><input id="editName" type="text"></div>
+      <div class="field"><label>Organisation</label><input id="editOrg" type="text"></div>
+      <div class="field"><label>Amount</label><input id="editAmount" type="text" placeholder="e.g. Up to £500"></div>
+      <div class="field"><label>URL</label><input id="editUrl" type="text"></div>
+      <div class="field"><label>Email</label><input id="editEmail" type="text"></div>
+      <div class="field"><label>Eligibility %</label><input id="editEligibility" type="number" min="0" max="100"></div>
+      <div class="field"><label>Tags (comma-separated)</label><input id="editTags" type="text" placeholder="wheelchair, mobility, sensory"></div>
+      <div class="field"><label>Description</label><textarea id="editDesc"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sm btn-outline" id="cancelEditBtn">Cancel</button>
+      <button class="btn btn-sm btn-primary" id="saveEditBtn">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var key = '';
+  var allGrants = [];
+  var grantsMap = {};
+  var currentFilter = 'all';
+
+  function esc(str) {
+    if (!str) return '';
+    var d = document.createElement('div');
+    d.textContent = String(str);
+    return d.innerHTML;
+  }
+
+  // ── AUTH ──────────────────────────────────────────────────
+  document.getElementById('loginBtn').addEventListener('click', login);
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') login();
+  });
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+
+  function login() {
+    var pw = document.getElementById('pwInput').value;
+    if (!pw) return;
+    document.getElementById('loginBtn').textContent = 'Logging in...';
+    document.getElementById('pwErr').style.display = 'none';
+
+    fetch('/admin/api/grants?filter=all', { headers: { 'x-admin-key': pw } })
+      .then(function(r) {
+        if (r.status === 401) throw new Error('wrong_password');
+        if (r.status === 503) throw new Error('not_configured');
+        if (!r.ok) throw new Error('server_error');
+        return r.json();
+      })
+      .then(function(data) {
+        key = pw;
+        allGrants = data.grants || [];
+        allGrants.forEach(function(g) { grantsMap[g.id] = g; });
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        renderStats();
+        renderGrants();
+      })
+      .catch(function(err) {
+        document.getElementById('loginBtn').textContent = 'Log in';
+        var msg = 'Something went wrong. Please try again.';
+        if (err.message === 'wrong_password') msg = 'Incorrect password.';
+        if (err.message === 'not_configured') msg = 'ADMIN_PASSWORD not set in environment variables.';
+        document.getElementById('pwErr').textContent = msg;
+        document.getElementById('pwErr').style.display = 'block';
+      });
+  }
+
+  function logout() {
+    key = '';
+    allGrants = [];
+    grantsMap = {};
+    document.getElementById('gate').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('loginBtn').textContent = 'Log in';
+  }
+
+  // ── FILTERS ───────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      currentFilter = btn.dataset.filter;
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderGrants();
+    });
+  });
+
+  // ── RENDER ────────────────────────────────────────────────
+  function renderStats() {
+    var total = allGrants.length;
+    var verified = allGrants.filter(function(g) { return g.verified; }).length;
+    var unverified = total - verified;
+    var bar = document.getElementById('statsBar');
+    bar.innerHTML = '';
+    bar.appendChild(makeStat(total, 'Total grants', 'blue'));
+    bar.appendChild(makeStat(unverified, 'Unverified', 'orange'));
+    bar.appendChild(makeStat(verified, 'Verified', 'green'));
+  }
+
+  function makeStat(num, label, colour) {
+    var div = document.createElement('div');
+    div.className = 'stat';
+    div.innerHTML = '<div class="stat-num ' + colour + '">' + num + '</div><div class="stat-label">' + label + '</div>';
+    return div;
+  }
+
+  function renderGrants() {
+    var filtered = allGrants.filter(function(g) {
+      if (currentFilter === 'unverified') return !g.verified;
+      if (currentFilter === 'verified') return g.verified;
+      return true;
+    });
+
+    var list = document.getElementById('grantsList');
+    list.innerHTML = '';
+
+    if (!filtered.length) {
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'No grants in this category.';
+      list.appendChild(empty);
+      return;
+    }
+
+    filtered.forEach(function(g) {
+      var row = document.createElement('div');
+      row.className = 'grant-row';
+      row.id = 'row-' + g.id;
+
+      var tags = (g.tags || []).map(function(t) {
+        var s = document.createElement('span');
+        s.className = 'tag';
+        s.textContent = t;
+        return s.outerHTML;
+      }).join('');
+
+      var metaParts = [];
+      if (g.amount) metaParts.push('<span>💰 ' + esc(g.amount) + '</span>');
+      if (g.eligibility) metaParts.push('<span>🎯 ' + g.eligibility + '% match</span>');
+      if (g.url) metaParts.push('<a href="' + esc(g.url) + '" target="_blank" rel="noopener">🔗 ' + esc(g.url) + '</a>');
+      if (g.email) metaParts.push('<span>📧 ' + esc(g.email) + '</span>');
+
+      var left = document.createElement('div');
+      left.innerHTML =
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">' +
+          '<div class="grant-name">' + esc(g.name) + '</div>' +
+          '<span class="badge ' + (g.verified ? 'badge-verified' : 'badge-unverified') + '">' + (g.verified ? '✅ Verified' : '⏳ Unverified') + '</span>' +
+        '</div>' +
+        '<div class="grant-org">' + esc(g.organisation) + '</div>' +
+        '<div class="grant-meta">' + metaParts.join('') + '</div>' +
+        (tags ? '<div class="grant-tags">' + tags + '</div>' : '');
+
+      var actions = document.createElement('div');
+      actions.className = 'actions';
+
+      var verifyBtn = document.createElement('button');
+      verifyBtn.className = 'btn btn-sm ' + (g.verified ? 'btn-outline' : 'btn-success');
+      verifyBtn.textContent = g.verified ? '↩ Unverify' : '✅ Verify';
+      verifyBtn.dataset.id = g.id;
+      verifyBtn.addEventListener('click', function() {
+        g.verified ? unverify(g.id) : verify(g.id);
+      });
+
+      var editBtn = document.createElement('button');
+      editBtn.className = 'btn btn-sm btn-outline';
+      editBtn.textContent = '✏️ Edit';
+      editBtn.addEventListener('click', function() { openEdit(g.id); });
+
+      var removeBtn = document.createElement('button');
+      removeBtn.className = 'btn btn-sm btn-danger';
+      removeBtn.textContent = '🗑️ Remove';
+      removeBtn.addEventListener('click', function() { remove(g.id); });
+
+      actions.appendChild(verifyBtn);
+      actions.appendChild(editBtn);
+      actions.appendChild(removeBtn);
+
+      row.appendChild(left);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+  }
+
+  // ── ACTIONS ───────────────────────────────────────────────
+  function verify(id) {
+    patchGrant(id, { verified: true }).then(function() {
+      if (grantsMap[id]) grantsMap[id].verified = true;
+      var g = allGrants.find(function(g) { return g.id === id; });
+      if (g) g.verified = true;
+      renderStats();
+      renderGrants();
+    });
+  }
+
+  function unverify(id) {
+    patchGrant(id, { verified: false }).then(function() {
+      if (grantsMap[id]) grantsMap[id].verified = false;
+      var g = allGrants.find(function(g) { return g.id === id; });
+      if (g) g.verified = false;
+      renderStats();
+      renderGrants();
+    });
+  }
+
+  function remove(id) {
+    if (!confirm('Remove this grant? It will be marked inactive.')) return;
+    patchGrant(id, { active: false }).then(function() {
+      allGrants = allGrants.filter(function(g) { return g.id !== id; });
+      delete grantsMap[id];
+      renderStats();
+      renderGrants();
+    });
+  }
+
+  function openEdit(id) {
+    var g = grantsMap[id];
+    if (!g) return;
+    document.getElementById('editId').value = g.id;
+    document.getElementById('editName').value = g.name || '';
+    document.getElementById('editOrg').value = g.organisation || '';
+    document.getElementById('editAmount').value = g.amount || '';
+    document.getElementById('editUrl').value = g.url || '';
+    document.getElementById('editEmail').value = g.email || '';
+    document.getElementById('editEligibility').value = g.eligibility || '';
+    document.getElementById('editTags').value = (g.tags || []).join(', ');
+    document.getElementById('editDesc').value = g.description || '';
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  function closeEdit() {
+    document.getElementById('editModal').classList.remove('open');
+  }
+
+  document.getElementById('closeEditBtn').addEventListener('click', closeEdit);
+  document.getElementById('cancelEditBtn').addEventListener('click', closeEdit);
+
+  document.getElementById('saveEditBtn').addEventListener('click', function() {
+    var id = document.getElementById('editId').value;
+    var updates = {
+      name: document.getElementById('editName').value,
+      organisation: document.getElementById('editOrg').value,
+      amount: document.getElementById('editAmount').value,
+      url: document.getElementById('editUrl').value,
+      email: document.getElementById('editEmail').value,
+      eligibility: parseInt(document.getElementById('editEligibility').value) || null,
+      tags: document.getElementById('editTags').value.split(',').map(function(t) { return t.trim(); }).filter(Boolean),
+      description: document.getElementById('editDesc').value
+    };
+    patchGrant(id, updates).then(function() {
+      if (grantsMap[id]) grantsMap[id] = Object.assign(grantsMap[id], updates);
+      var idx = allGrants.findIndex(function(g) { return g.id === id; });
+      if (idx > -1) allGrants[idx] = Object.assign(allGrants[idx], updates);
+      closeEdit();
+      renderGrants();
+    });
+  });
+
+  // ── API ───────────────────────────────────────────────────
+  function patchGrant(id, updates) {
+    return fetch('/admin/api/grants/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+      body: JSON.stringify(updates)
+    }).then(function(r) {
+      if (!r.ok) throw new Error('Update failed');
+      return r.json();
+    });
+  }
+</script>
+</body>
+</html>
