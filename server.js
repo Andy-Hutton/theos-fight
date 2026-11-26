@@ -478,8 +478,8 @@ app.post('/organisation-grants/search', orgSearchLimiter, orgAuth, async (req, r
 // default function duration, and heartbeats so the connection never sits idle.
 const orgDeepLimiter = rateLimit({
   windowMs: 24 * 60 * 60 * 1000,
-  max: 1,
-  // An incomplete form shouldn't use up someone's one deep search for the day.
+  max: 2,
+  // An incomplete form shouldn't use up one of someone's deep searches.
   skipFailedRequests: true,
   message: { success: false, error: 'We run a limited number of deep searches each day to keep this free. Please try again tomorrow.' }
 });
