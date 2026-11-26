@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 require('dotenv').config();
 const app = express();
 const client = new Anthropic();
@@ -288,6 +289,169 @@ To approve and add to the Stories page, copy the above into testimonials.html
     res.json({ success: true });
   }
 });
+// ORGANISATION GRANTS — private tool, separate from the family finder
+const ORG_COOKIE = 'org_session';
+const ORG_SESSION_MS = 7 * 24 * 60 * 60 * 1000;
+
+const orgLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Too many attempts. Please wait a few minutes and try again.' }
+});
+
+const orgSearchLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Too many searches. Please wait a few minutes and try again.' }
+});
+
+const orgRequestLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: { success: false, error: 'Too many requests. Please try again later.' }
+});
+
+function signOrgSession(expires) {
+  const sig = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(String(expires)).digest('hex');
+  return `${expires}.${sig}`;
+}
+
+function orgSessionValid(req) {
+  if (!process.env.SESSION_SECRET) return false;
+  const raw = (req.headers.cookie || '').split(';').map(c => c.trim()).find(c => c.startsWith(`${ORG_COOKIE}=`));
+  if (!raw) return false;
+  const [expires, sig] = raw.slice(ORG_COOKIE.length + 1).split('.');
+  if (!expires || !sig) return false;
+  const expected = crypto.createHmac('sha256', process.env.SESSION_SECRET).update(expires).digest('hex');
+  if (sig.length !== expected.length) return false;
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return false;
+  return Number(expires) > Date.now();
+}
+
+function orgAuth(req, res, next) {
+  if (!orgSessionValid(req)) return res.status(401).json({ success: false, error: 'Please log in again.' });
+  next();
+}
+
+function parseOrgGrants(text) {
+  const start = text.indexOf('[');
+  const end = text.lastIndexOf(']');
+  if (start === -1 || end === -1) throw new Error('No JSON array in response');
+  return JSON.parse(text.slice(start, end + 1));
+}
+
+app.get('/organisation-grants', (req, res) => {
+  const template = orgSessionValid(req) ? 'org-grants-template.html' : 'org-login-template.html';
+  res.send(fs.readFileSync(path.join(__dirname, template), 'utf8'));
+});
+
+app.post('/organisation-grants/login', orgLoginLimiter, (req, res) => {
+  if (!process.env.ORG_PASSWORD || !process.env.SESSION_SECRET) {
+    return res.status(503).json({ success: false, error: 'Organisation login is not set up yet.' });
+  }
+  const supplied = Buffer.from(typeof req.body.password === 'string' ? req.body.password : '');
+  const expected = Buffer.from(process.env.ORG_PASSWORD);
+  const ok = supplied.length === expected.length && crypto.timingSafeEqual(supplied, expected);
+  if (!ok) {
+    return res.status(401).json({ success: false, error: "That password isn't right. Try again, or request access below." });
+  }
+  const expires = Date.now() + ORG_SESSION_MS;
+  res.cookie(ORG_COOKIE, signOrgSession(expires), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: ORG_SESSION_MS,
+    path: '/organisation-grants'
+  });
+  res.json({ success: true });
+});
+
+app.post('/organisation-grants/request-access', orgRequestLimiter, async (req, res) => {
+  const orgName = sanitiseText(req.body.orgName, 120);
+  const contactName = sanitiseText(req.body.contactName, 80);
+  const email = sanitiseText(req.body.email, 120);
+
+  if (!orgName || !contactName || !email) {
+    return res.status(400).json({ success: false, error: 'Please fill in all three fields.' });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: 'hello@theosfight.co.uk',
+      subject: `🏛️ Organisation grants access request — ${orgName}`,
+      text: `
+ORGANISATION ACCESS REQUEST
+===========================
+Organisation: ${orgName}
+Contact: ${contactName}
+Email: ${email}
+Date: ${new Date().toLocaleString('en-GB')}
+
+===========================
+To approve, reply with the organisation access password.
+      `
+    });
+
+    console.log(`🏛️ Org access requested by ${orgName}`);
+  } catch (error) {
+    console.error('Org access request email error:', error.message);
+    console.log(`🏛️ Org access request from ${orgName} (${contactName}, ${email})`);
+  }
+
+  res.json({ success: true });
+});
+
+app.post('/organisation-grants/search', orgSearchLimiter, orgAuth, async (req, res) => {
+  const orgName = sanitiseText(req.body.orgName, 120);
+  const orgType = sanitiseText(req.body.orgType, 60);
+  const charityNumber = sanitiseText(req.body.charityNumber, 20);
+  const region = sanitiseText(req.body.region, 40);
+  const town = sanitiseText(req.body.town, 100);
+  const beneficiaries = sanitiseText(req.body.beneficiaries, 30);
+  const turnover = sanitiseText(req.body.turnover, 30);
+  const staff = sanitiseText(req.body.staff, 30);
+  const amount = sanitiseText(req.body.amount, 30);
+  const fundingFor = Array.isArray(req.body.fundingFor)
+    ? req.body.fundingFor.slice(0, 10).map(f => sanitiseText(f, 40)).filter(Boolean)
+    : [];
+  const detail = sanitiseText(req.body.detail, 800);
+
+  if (!orgName || !orgType || !region || !town || !beneficiaries || !staff || !amount || !fundingFor.length || !detail) {
+    return res.status(400).json({ success: false, error: 'Please fill in all the fields above.' });
+  }
+
+  try {
+    const message = await client.messages.create({
+      model: 'claude-sonnet-5',
+      max_tokens: 2000,
+      thinking: { type: 'disabled' },
+      messages: [{
+        role: 'user',
+        content: `You are a UK grant specialist helping organisations that support children with additional needs find grant funding. Search for real UK grant funders this organisation is genuinely eligible to apply to. Organisation: ${orgName}. Legal structure: ${orgType}. Charity number: ${charityNumber || 'Not provided'}. Nation or region: ${region}. Town, city or borough: ${town}. People supported each year: ${beneficiaries}. Annual turnover: ${turnover || 'Not provided'}. Staff: ${staff}. Amount sought: ${amount}. What the grant would fund: ${fundingFor.join(', ')}. In their own words: ${detail}. IMPORTANT: eligibility depends heavily on legal structure and geography — only return funders this legal structure can actually apply to, that fund this region, and whose award sizes fit the amount sought. Include relevant local community foundations and devolved-nation funders where they apply. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Funder name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description of what they fund and why this organisation fits", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "grants@example.org"}] Only use stable homepage or main section URLs for reputable UK funders. Never use deep links or specific campaign pages that may change.`
+      }]
+    });
+
+    const grants = parseOrgGrants(message.content[0].text);
+    const validatedGrants = await validateGrantUrls(grants);
+    res.json({ success: true, grants: validatedGrants });
+
+  } catch (error) {
+    console.error('Org search error:', error.message);
+    res.status(500).json({ success: false, error: 'Search failed. Please try again.' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Theo's Fight running securely on http://localhost:${PORT}`);

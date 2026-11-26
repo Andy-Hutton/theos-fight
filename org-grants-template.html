@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3T4248KEPM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-3T4248KEPM');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organisation Grants — Theo's Fight</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --text: #1a2b3c;
+    --muted: #8a9aaa;
+    --red: #e03b1f;
+    --success: #2ecc71;
+  }
+  body { font-family:'DM Sans',sans-serif;background:#f0f6fb;color:var(--text); }
+
+  /* NAV */
+  nav { position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.07); }
+  .nav-logo { font-family:'Cormorant Garamond',Georgia,serif;font-size:2.5rem;font-weight:700;letter-spacing:-0.01em;color:#fff;text-decoration:none;display:flex;align-items:center; }
+  .nav-logo span { color:var(--blue); }
+  .nav-monkey { height:52px;width:52px;display:inline-block;vertical-align:middle;margin-right:10px;border-radius:50%;object-fit:cover;transition:transform 0.3s ease; }
+  .nav-logo:hover .nav-monkey { transform:rotate(-8deg) scale(1.1); }
+  .nav-links { display:flex;gap:32px;list-style:none;align-items:center; }
+  .nav-links a { color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.88rem;font-weight:500;letter-spacing:0.02em;transition:color 0.2s; }
+  .nav-links a:hover { color:#fff; }
+  .nav-cta { background:var(--blue);color:#fff !important;padding:10px 22px;border-radius:6px;font-weight:600 !important;transition:background 0.2s,transform 0.2s !important; }
+  .nav-cta:hover { background:#1e87bf !important;transform:translateY(-1px); }
+
+  /* LAYOUT */
+  .page { padding:130px 48px 80px; }
+  .inner { max-width:820px;margin:0 auto; }
+  .headline { font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:8px; }
+  .sub { font-size:1rem;color:#5a7a8a;font-weight:300;line-height:1.6;margin-bottom:14px; }
+  .privacy-note { font-size:0.86rem;color:var(--blue-dark);font-weight:600;background:rgba(42,159,214,0.08);border-radius:8px;padding:10px 14px;display:inline-block;margin-bottom:36px; }
+
+  /* FORM */
+  .form-card { background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(42,159,214,0.08);padding:36px 32px; }
+  .form-grid { display:grid;grid-template-columns:1fr 1fr;gap:18px; }
+  .form-group { display:flex;flex-direction:column;gap:6px; }
+  .form-group.full { grid-column:1/-1; }
+  .form-label { font-size:0.78rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.06em; }
+  .form-label .opt { color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;margin-left:4px;font-style:italic; }
+  .form-input, .form-select, .form-textarea { font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--text);background:#fff;border:1.5px solid #b8d0e0;border-radius:8px;padding:12px 14px;outline:none;transition:border 0.2s,box-shadow 0.2s;width:100%; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,159,214,0.1); }
+  .form-input::placeholder, .form-textarea::placeholder { color:#a0b4c0; }
+  .form-textarea { resize:vertical;min-height:110px; }
+  .checkbox-group { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px; }
+  .checkbox-item { display:flex;align-items:center;gap:8px;background:#f8fafc;border:1.5px solid #d0dce8;border-radius:8px;padding:10px 14px;cursor:pointer;transition:all 0.15s;font-size:0.88rem;font-weight:600;color:var(--text);user-select:none; }
+  .checkbox-item:hover { border-color:var(--blue);background:#f0f6fb; }
+  .checkbox-item input[type="checkbox"] { width:16px;height:16px;accent-color:var(--blue);margin:0;flex-shrink:0; }
+  .checkbox-item.checked { border-color:var(--blue);background:rgba(42,159,214,0.08);color:var(--blue-dark); }
+  .form-actions { margin-top:28px; }
+  .btn-search { display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#2a9fd6 0%,#1a7aaa 100%);color:#fff;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;padding:16px 36px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 20px rgba(42,159,214,0.35);transition:transform 0.2s,box-shadow 0.2s; }
+  .btn-search:hover { transform:translateY(-2px);box-shadow:0 8px 28px rgba(42,159,214,0.45); }
+  .btn-search:disabled { opacity:0.6;cursor:not-allowed;transform:none; }
+  .msg-error { color:var(--red);font-size:0.88rem;font-weight:600;line-height:1.5;margin-top:16px;display:none; }
+  .msg-error.visible { display:block; }
+
+  /* LOADING */
+  .loading-card { background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(42,159,214,0.08);padding:48px 32px;text-align:center;display:none;margin-top:28px; }
+  .loading-card.visible { display:block; }
+  .loading-monkey { width:90px;height:90px;margin:0 auto 20px;display:block;border-radius:50%;animation:monkeyFloat 1.5s ease-in-out infinite; }
+  @keyframes monkeyFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+  .loading-title { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;margin-bottom:6px; }
+
+  /* RESULTS */
+  .results-section { display:none;margin-top:40px; }
+  .results-section.visible { display:block; }
+  .results-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px; }
+  .results-title { font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700; }
+  .results-count { background:var(--red);color:#fff;border-radius:20px;padding:5px 16px;font-size:0.82rem;font-weight:700; }
+  .grant-card { background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(42,159,214,0.08);border-left:4px solid var(--blue);padding:24px;margin-bottom:16px;transition:box-shadow 0.2s,transform 0.2s; }
+  .grant-card:hover { box-shadow:0 8px 32px rgba(42,159,214,0.15);transform:translateY(-2px); }
+  .grant-top { display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap; }
+  .grant-name { font-size:1.05rem;font-weight:700; }
+  .grant-amount { background:#f0f6fb;border:1.5px solid #c8dde8;border-radius:6px;padding:4px 12px;font-size:0.85rem;font-weight:700;color:var(--blue-dark);white-space:nowrap; }
+  .grant-org { font-size:0.82rem;font-weight:600;color:var(--muted);margin-bottom:10px; }
+  .grant-match { font-size:0.78rem;font-weight:700;color:var(--success);margin-bottom:10px; }
+  .grant-desc { font-size:0.88rem;line-height:1.6;margin-bottom:14px;font-weight:300; }
+  .grant-tags { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px; }
+  .tag { background:#f0f6fb;color:var(--blue-dark);font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px; }
+  .grant-links { display:flex;flex-wrap:wrap;gap:16px;align-items:center; }
+  .grant-links a { font-size:0.85rem;font-weight:700;color:var(--blue-dark);text-decoration:none;border-bottom:1.5px solid rgba(42,159,214,0.4);transition:color 0.2s; }
+  .grant-links a:hover { color:var(--blue); }
+  .results-footnote { font-size:0.84rem;color:#5a7a8a;font-style:italic;line-height:1.6;margin-top:8px; }
+
+  /* FOOTER */
+  footer { background:#0d1a26;padding:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;border-top:1px solid rgba(255,255,255,0.05); }
+  .footer-logo { font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:rgba(255,255,255,0.6); }
+  .footer-logo span { color:var(--blue); }
+  .footer-links { display:flex;gap:28px;list-style:none;flex-wrap:wrap; }
+  .footer-links a { font-size:0.82rem;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s; }
+  .footer-links a:hover { color:rgba(255,255,255,0.7); }
+  .footer-copy { font-size:0.78rem;color:rgba(255,255,255,0.2);font-style:italic; }
+
+  @media (max-width: 760px) {
+    nav { padding:14px 20px; }
+    .nav-links { display:none; }
+    .page { padding:110px 18px 60px; }
+    .form-card { padding:26px 20px; }
+    .form-grid { grid-template-columns:1fr; }
+    .checkbox-group { grid-template-columns:1fr; }
+    footer { padding:40px 24px;flex-direction:column;text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo"><img src="/monkey.webp" alt="" class="nav-monkey">Theo's <span>Fight</span></a>
+  <ul class="nav-links">
+    <li><a href="/about.html">Our Story</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="/testimonials.html">Family Stories</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/#searchSection" class="nav-cta">Search Grants</a></li>
+  </ul>
+</nav>
+
+<main class="page">
+  <div class="inner">
+    <h1 class="headline">Find funding for your organisation</h1>
+    <p class="sub">Tell us about your organisation and what you need funding for. We'll search for UK grants you're actually eligible for.</p>
+    <p class="privacy-note">Nothing you enter here is stored or shared.</p>
+
+    <div class="form-card">
+      <form id="orgForm" novalidate>
+        <div class="form-grid">
+
+          <div class="form-group full">
+            <label class="form-label" for="orgName">Organisation name</label>
+            <input class="form-input" type="text" id="orgName" maxlength="120" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="orgType">Organisation type</label>
+            <select class="form-select" id="orgType" required>
+              <option value="">Choose one…</option>
+              <option>Registered charity</option>
+              <option>Charitable incorporated organisation (CIO)</option>
+              <option>Charitable company (CLG)</option>
+              <option>Community interest company (CIC)</option>
+              <option>Unincorporated community group</option>
+              <option>School or college</option>
+              <option>NHS or statutory body</option>
+              <option>Social enterprise</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="charityNumber">Charity number <span class="opt">(optional)</span></label>
+            <input class="form-input" type="text" id="charityNumber" maxlength="20">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="region">Nation or region</label>
+            <select class="form-select" id="region" required>
+              <option value="">Choose one…</option>
+              <option>North East England</option>
+              <option>North West England</option>
+              <option>Yorkshire &amp; the Humber</option>
+              <option>East Midlands</option>
+              <option>West Midlands</option>
+              <option>East of England</option>
+              <option>London</option>
+              <option>South East England</option>
+              <option>South West England</option>
+              <option>Scotland</option>
+              <option>Wales</option>
+              <option>Northern Ireland</option>
+              <option>UK-wide</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="town">Town, city or borough</label>
+            <input class="form-input" type="text" id="town" maxlength="100" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="beneficiaries">People you support each year</label>
+            <select class="form-select" id="beneficiaries" required>
+              <option value="">Choose one…</option>
+              <option>Under 50</option>
+              <option>50–100</option>
+              <option>100–500</option>
+              <option>500–1,000</option>
+              <option>1,000–5,000</option>
+              <option>More than 5,000</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="turnover">Annual turnover <span class="opt">(optional)</span></label>
+            <select class="form-select" id="turnover">
+              <option value="">Choose one…</option>
+              <option>Under £10,000</option>
+              <option>£10,000–£50,000</option>
+              <option>£50,000–£100,000</option>
+              <option>£100,000–£500,000</option>
+              <option>£500,000–£1m</option>
+              <option>Over £1m</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="staff">Staff</label>
+            <select class="form-select" id="staff" required>
+              <option value="">Choose one…</option>
+              <option>Volunteers only</option>
+              <option>1–5 paid staff</option>
+              <option>6–20 paid staff</option>
+              <option>21–50 paid staff</option>
+              <option>More than 50 paid staff</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="amount">Roughly how much are you looking for?</label>
+            <select class="form-select" id="amount" required>
+              <option value="">Choose one…</option>
+              <option>Under £1,000</option>
+              <option>£1,000–£5,000</option>
+              <option>£5,000–£25,000</option>
+              <option>£25,000–£100,000</option>
+              <option>Over £100,000</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label class="form-label">What would the grant fund? <span class="opt">(tick all that apply)</span></label>
+            <div class="checkbox-group" id="fundingFor">
+              <label class="checkbox-item"><input type="checkbox" value="Equipment">Equipment</label>
+              <label class="checkbox-item"><input type="checkbox" value="Core costs and salaries">Core costs and salaries</label>
+              <label class="checkbox-item"><input type="checkbox" value="Activities and sessions">Activities and sessions</label>
+              <label class="checkbox-item"><input type="checkbox" value="Transport">Transport</label>
+              <label class="checkbox-item"><input type="checkbox" value="Building or premises">Building or premises</label>
+              <label class="checkbox-item"><input type="checkbox" value="Training">Training</label>
+              <label class="checkbox-item"><input type="checkbox" value="Start-up costs">Start-up costs</label>
+              <label class="checkbox-item"><input type="checkbox" value="Other">Other</label>
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label class="form-label" for="detail">Tell us more</label>
+            <textarea class="form-textarea" id="detail" maxlength="800" placeholder="What would the money pay for, and who would it help?" required></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-search" type="submit" id="searchBtn">Search for funding</button>
+          <div class="msg-error" id="formError"></div>
+        </div>
+      </form>
+    </div>
+
+    <div class="loading-card" id="loadingCard">
+      <img src="/monkey.webp" alt="" class="loading-monkey">
+      <div class="loading-title">Searching for grants your organisation can apply for…</div>
+    </div>
+
+    <section class="results-section" id="resultsSection">
+      <div class="results-header">
+        <h2 class="results-title">Funding we found for you</h2>
+        <span class="results-count" id="resultsCount"></span>
+      </div>
+      <div id="resultsList"></div>
+      <p class="results-footnote">Always check eligibility and deadlines on the funder's own website before applying.</p>
+    </section>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Theo's <span>Fight</span></div>
+  <ul class="footer-links">
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="/testimonials.html">Family Stories</a></li>
+    <li><a href="/feedback.html">Share Your Experience</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+  </ul>
+  <div class="footer-copy">Built with love to help families access the equipment their children deserve · Free to use, always · Made in the UK ♥</div>
+</footer>
+
+<script>
+  var form = document.getElementById('orgForm');
+  var searchBtn = document.getElementById('searchBtn');
+  var formError = document.getElementById('formError');
+  var loadingCard = document.getElementById('loadingCard');
+  var resultsSection = document.getElementById('resultsSection');
+  var resultsList = document.getElementById('resultsList');
+  var resultsCount = document.getElementById('resultsCount');
+
+  // checkbox highlight
+  var boxes = document.querySelectorAll('#fundingFor input[type="checkbox"]');
+  for (var i = 0; i < boxes.length; i++) {
+    boxes[i].addEventListener('change', function() {
+      this.parentElement.classList.toggle('checked', this.checked);
+    });
+  }
+
+  function val(id) { return document.getElementById(id).value.trim(); }
+
+  function showError(text) {
+    formError.textContent = text;
+    formError.classList.add('visible');
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function safeUrl(url) {
+    var clean = String(url || '').trim();
+    return /^https?:\/\//i.test(clean) ? clean : '';
+  }
+
+  function renderGrants(grants) {
+    resultsList.innerHTML = '';
+    grants.forEach(function(grant) {
+      var card = document.createElement('div');
+      card.className = 'grant-card';
+
+      var html = '<div class="grant-top">' +
+        '<div class="grant-name">' + escapeHtml(grant.name) + '</div>';
+      if (grant.amount) html += '<div class="grant-amount">' + escapeHtml(grant.amount) + '</div>';
+      html += '</div>';
+
+      if (grant.organisation) html += '<div class="grant-org">' + escapeHtml(grant.organisation) + '</div>';
+      if (grant.eligibility) html += '<div class="grant-match">' + escapeHtml(grant.eligibility) + '% match</div>';
+      if (grant.description) html += '<div class="grant-desc">' + escapeHtml(grant.description) + '</div>';
+
+      if (Array.isArray(grant.tags) && grant.tags.length) {
+        html += '<div class="grant-tags">';
+        grant.tags.forEach(function(tag) {
+          html += '<span class="tag">' + escapeHtml(tag) + '</span>';
+        });
+        html += '</div>';
+      }
+
+      html += '<div class="grant-links">';
+      var url = safeUrl(grant.url);
+      if (url) {
+        html += '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">Visit funder\'s website</a>';
+      }
+      if (grant.email) {
+        html += '<a href="mailto:' + escapeHtml(grant.email) + '">' + escapeHtml(grant.email) + '</a>';
+      }
+      html += '</div>';
+
+      card.innerHTML = html;
+      resultsList.appendChild(card);
+    });
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    formError.classList.remove('visible');
+
+    var fundingFor = [];
+    for (var i = 0; i < boxes.length; i++) {
+      if (boxes[i].checked) fundingFor.push(boxes[i].value);
+    }
+
+    var payload = {
+      orgName: val('orgName'),
+      orgType: val('orgType'),
+      charityNumber: val('charityNumber'),
+      region: val('region'),
+      town: val('town'),
+      beneficiaries: val('beneficiaries'),
+      turnover: val('turnover'),
+      staff: val('staff'),
+      amount: val('amount'),
+      fundingFor: fundingFor,
+      detail: val('detail')
+    };
+
+    if (!payload.orgName || !payload.orgType || !payload.region || !payload.town ||
+        !payload.beneficiaries || !payload.staff || !payload.amount ||
+        !fundingFor.length || !payload.detail) {
+      showError('Please fill in all the fields above.');
+      return;
+    }
+
+    searchBtn.disabled = true;
+    resultsSection.classList.remove('visible');
+    loadingCard.classList.add('visible');
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'org_grant_search', { org_type: payload.orgType, region: payload.region });
+    }
+
+    fetch('/organisation-grants/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) {
+      if (res.status === 401) {
+        window.location.reload();
+        return null;
+      }
+      return res.json().catch(function() { return {}; });
+    })
+    .then(function(data) {
+      if (!data) return;
+      loadingCard.classList.remove('visible');
+      searchBtn.disabled = false;
+      if (data.success && Array.isArray(data.grants) && data.grants.length) {
+        renderGrants(data.grants);
+        resultsCount.textContent = data.grants.length + (data.grants.length === 1 ? ' grant' : ' grants');
+        resultsSection.classList.add('visible');
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      showError((data && data.error) || 'Search failed. Please try again.');
+    })
+    .catch(function() {
+      loadingCard.classList.remove('visible');
+      searchBtn.disabled = false;
+      showError('Search failed. Please try again.');
+    });
+  });
+</script>
+</body>
+</html>

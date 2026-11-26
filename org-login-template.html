@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organisation Grants — Theo's Fight</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #2a9fd6;
+    --blue-dark: #1a6fa0;
+    --text: #1a2b3c;
+    --muted: #8a9aaa;
+    --red: #e03b1f;
+  }
+  body { font-family:'DM Sans',sans-serif;background:#f0f6fb;color:var(--text); }
+
+  /* NAV */
+  nav { position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.07); }
+  .nav-logo { font-family:'Cormorant Garamond',Georgia,serif;font-size:2.5rem;font-weight:700;letter-spacing:-0.01em;color:#fff;text-decoration:none;display:flex;align-items:center; }
+  .nav-logo span { color:var(--blue); }
+  .nav-monkey { height:52px;width:52px;display:inline-block;vertical-align:middle;margin-right:10px;border-radius:50%;object-fit:cover;transition:transform 0.3s ease; }
+  .nav-logo:hover .nav-monkey { transform:rotate(-8deg) scale(1.1); }
+  .nav-links { display:flex;gap:32px;list-style:none;align-items:center; }
+  .nav-links a { color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.88rem;font-weight:500;letter-spacing:0.02em;transition:color 0.2s; }
+  .nav-links a:hover { color:#fff; }
+  .nav-cta { background:var(--blue);color:#fff !important;padding:10px 22px;border-radius:6px;font-weight:600 !important;transition:background 0.2s,transform 0.2s !important; }
+  .nav-cta:hover { background:#1e87bf !important;transform:translateY(-1px); }
+
+  /* LOGIN */
+  .login-wrap { min-height:100vh;padding:150px 24px 80px;display:flex;align-items:flex-start;justify-content:center; }
+  .login-card { background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(42,159,214,0.10);padding:44px 40px;max-width:520px;width:100%; }
+  .login-card h1 { font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:10px; }
+  .lede { font-size:1rem;color:#5a7a8a;font-weight:300;line-height:1.6;margin-bottom:32px; }
+  .form-label { display:block;font-size:0.78rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px; }
+  .form-input { font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--text);background:#fff;border:1.5px solid #b8d0e0;border-radius:8px;padding:12px 14px;outline:none;transition:border 0.2s,box-shadow 0.2s;width:100%; }
+  .form-input:focus { border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,159,214,0.1); }
+  .form-input::placeholder { color:#a0b4c0; }
+  .field { margin-bottom:18px; }
+  .btn-search { display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#2a9fd6 0%,#1a7aaa 100%);color:#fff;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;padding:14px 32px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 20px rgba(42,159,214,0.35);transition:transform 0.2s,box-shadow 0.2s; }
+  .btn-search:hover { transform:translateY(-2px);box-shadow:0 8px 28px rgba(42,159,214,0.45); }
+  .btn-search:disabled { opacity:0.6;cursor:not-allowed;transform:none; }
+  .msg-error { color:var(--red);font-size:0.86rem;font-weight:600;line-height:1.5;margin-bottom:16px;display:none; }
+  .msg-error.visible { display:block; }
+  .msg-ok { color:#1a7a4a;font-size:0.92rem;font-weight:600;line-height:1.5;display:none; }
+  .msg-ok.visible { display:block; }
+  .divider { border:none;border-top:1px solid #e0ebf3;margin:36px 0 28px; }
+  .login-card h2 { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;margin-bottom:6px; }
+  .request-sub { font-size:0.92rem;color:#5a7a8a;font-weight:300;line-height:1.6;margin-bottom:22px; }
+
+  /* FOOTER */
+  footer { background:#0d1a26;padding:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;border-top:1px solid rgba(255,255,255,0.05); }
+  .footer-logo { font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:rgba(255,255,255,0.6); }
+  .footer-logo span { color:var(--blue); }
+  .footer-links { display:flex;gap:28px;list-style:none;flex-wrap:wrap; }
+  .footer-links a { font-size:0.82rem;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s; }
+  .footer-links a:hover { color:rgba(255,255,255,0.7); }
+  .footer-copy { font-size:0.78rem;color:rgba(255,255,255,0.2);font-style:italic; }
+
+  @media (max-width: 760px) {
+    nav { padding:14px 20px; }
+    .nav-links { display:none; }
+    .login-wrap { padding:120px 18px 60px; }
+    .login-card { padding:32px 24px; }
+    footer { padding:40px 24px;flex-direction:column;text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo"><img src="/monkey.webp" alt="" class="nav-monkey">Theo's <span>Fight</span></a>
+  <ul class="nav-links">
+    <li><a href="/about.html">Our Story</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="/testimonials.html">Family Stories</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/#searchSection" class="nav-cta">Search Grants</a></li>
+  </ul>
+</nav>
+
+<main class="login-wrap">
+  <div class="login-card">
+    <h1>Organisation Grants</h1>
+    <p class="lede">A private funding search for organisations supporting children with additional needs.</p>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label class="form-label" for="password">Access password</label>
+        <input class="form-input" type="password" id="password" autocomplete="current-password" required>
+      </div>
+      <div class="msg-error" id="loginError"></div>
+      <button class="btn-search" type="submit" id="loginBtn">Enter</button>
+    </form>
+
+    <hr class="divider">
+
+    <h2>Need access?</h2>
+    <p class="request-sub">Tell us a little about your organisation and we'll get back to you.</p>
+
+    <form id="requestForm" novalidate>
+      <div class="field">
+        <label class="form-label" for="reqOrg">Organisation name</label>
+        <input class="form-input" type="text" id="reqOrg" maxlength="120" required>
+      </div>
+      <div class="field">
+        <label class="form-label" for="reqName">Your name</label>
+        <input class="form-input" type="text" id="reqName" maxlength="80" required>
+      </div>
+      <div class="field">
+        <label class="form-label" for="reqEmail">Email</label>
+        <input class="form-input" type="email" id="reqEmail" maxlength="120" required>
+      </div>
+      <div class="msg-error" id="requestError"></div>
+      <button class="btn-search" type="submit" id="requestBtn">Request access</button>
+    </form>
+    <p class="msg-ok" id="requestDone">Thanks — we'll be in touch soon.</p>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Theo's <span>Fight</span></div>
+  <ul class="footer-links">
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="/testimonials.html">Family Stories</a></li>
+    <li><a href="/feedback.html">Share Your Experience</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+  </ul>
+  <div class="footer-copy">Built with love to help families access the equipment their children deserve · Free to use, always · Made in the UK ♥</div>
+</footer>
+
+<script>
+  var loginForm = document.getElementById('loginForm');
+  var loginBtn = document.getElementById('loginBtn');
+  var loginError = document.getElementById('loginError');
+
+  function showError(el, text) {
+    el.textContent = text;
+    el.classList.add('visible');
+  }
+
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    loginError.classList.remove('visible');
+    var password = document.getElementById('password').value;
+    if (!password) {
+      showError(loginError, "That password isn't right. Try again, or request access below.");
+      return;
+    }
+    loginBtn.disabled = true;
+    fetch('/organisation-grants/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: password })
+    })
+    .then(function(res) { return res.json().catch(function() { return {}; }); })
+    .then(function(data) {
+      if (data && data.success) {
+        window.location.reload();
+        return;
+      }
+      loginBtn.disabled = false;
+      showError(loginError, (data && data.error) || "That password isn't right. Try again, or request access below.");
+    })
+    .catch(function() {
+      loginBtn.disabled = false;
+      showError(loginError, 'Something went wrong. Please try again.');
+    });
+  });
+
+  var requestForm = document.getElementById('requestForm');
+  var requestBtn = document.getElementById('requestBtn');
+  var requestError = document.getElementById('requestError');
+  var requestDone = document.getElementById('requestDone');
+
+  requestForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    requestError.classList.remove('visible');
+    var payload = {
+      orgName: document.getElementById('reqOrg').value.trim(),
+      contactName: document.getElementById('reqName').value.trim(),
+      email: document.getElementById('reqEmail').value.trim()
+    };
+    if (!payload.orgName || !payload.contactName || !payload.email) {
+      showError(requestError, 'Please fill in all three fields.');
+      return;
+    }
+    requestBtn.disabled = true;
+    fetch('/organisation-grants/request-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) { return res.json().catch(function() { return {}; }); })
+    .then(function(data) {
+      if (data && data.success) {
+        requestForm.style.display = 'none';
+        requestDone.classList.add('visible');
+        return;
+      }
+      requestBtn.disabled = false;
+      showError(requestError, (data && data.error) || 'Something went wrong. Please try again.');
+    })
+    .catch(function() {
+      requestBtn.disabled = false;
+      showError(requestError, 'Something went wrong. Please try again.');
+    });
+  });
+</script>
+</body>
+</html>
