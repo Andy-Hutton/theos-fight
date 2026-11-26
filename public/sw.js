@@ -1,4 +1,4 @@
-const CACHE_NAME = 'theos-fight-v2';
+const CACHE_NAME = 'theos-fight-v3';
 const ASSETS = [
   '/',
   '/index.html',
