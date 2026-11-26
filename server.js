@@ -474,6 +474,89 @@ app.post('/organisation-grants/search', orgSearchLimiter, orgAuth, async (req, r
   }
 });
 
+// Deep search: live web search, runs for minutes. Relies on Vercel's 300s
+// default function duration, and heartbeats so the connection never sits idle.
+const orgDeepLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 1,
+  // An incomplete form shouldn't use up someone's one deep search for the day.
+  skipFailedRequests: true,
+  message: { success: false, error: 'We run a limited number of deep searches each day to keep this free. Please try again tomorrow.' }
+});
+
+app.post('/organisation-grants/deep-search', orgAuth, orgDeepLimiter, async (req, res) => {
+  const orgName = sanitiseText(req.body.orgName, 120);
+  const orgType = sanitiseText(req.body.orgType, 60);
+  const charityNumber = sanitiseText(req.body.charityNumber, 20);
+  const region = sanitiseText(req.body.region, 40);
+  const town = sanitiseText(req.body.town, 100);
+  const beneficiaries = sanitiseText(req.body.beneficiaries, 30);
+  const turnover = sanitiseText(req.body.turnover, 30);
+  const staff = sanitiseText(req.body.staff, 30);
+  const amount = sanitiseText(req.body.amount, 30);
+  const fundingFor = Array.isArray(req.body.fundingFor)
+    ? req.body.fundingFor.slice(0, 10).map(f => sanitiseText(f, 40)).filter(Boolean)
+    : [];
+  const detail = sanitiseText(req.body.detail, 800);
+  const exclude = Array.isArray(req.body.exclude)
+    ? req.body.exclude.slice(0, 25).map(e => sanitiseText(e, 120)).filter(Boolean)
+    : [];
+
+  if (!orgName || !orgType || !region || !town || !beneficiaries || !staff || !amount || !fundingFor.length || !detail) {
+    return res.status(400).json({ success: false, error: 'Please fill in all the fields above.' });
+  }
+
+  const started = Date.now();
+  res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+
+  const heartbeat = setInterval(() => {
+    res.write(JSON.stringify({ type: 'ping', elapsed: Math.round((Date.now() - started) / 1000) }) + '\n');
+  }, 10000);
+
+  try {
+    const request = {
+      model: 'claude-sonnet-5',
+      max_tokens: 16000,
+      output_config: { effort: 'low' },
+      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
+      messages: [{
+        role: 'user',
+        content: `You are a UK grant specialist helping organisations that support children with additional needs find grant funding. Use web search to find real UK grant funders this organisation is genuinely eligible to apply to, and check they are currently open for applications. Organisation: ${orgName}. Legal structure: ${orgType}. Charity number: ${charityNumber || 'Not provided'}. Nation or region: ${region}. Town, city or borough: ${town}. People supported each year: ${beneficiaries}. Annual turnover: ${turnover || 'Not provided'}. Staff: ${staff}. Amount sought: ${amount}. What the grant would fund: ${fundingFor.join(', ')}. In their own words: ${detail}. IMPORTANT: eligibility depends heavily on legal structure and geography — only return funders this legal structure can actually apply to, that fund this region, and whose award sizes fit the amount sought. Concentrate on funders that are harder to find: smaller regional trusts, local community foundations covering ${town} and ${region}, and devolved-nation funders where they apply.${exclude.length ? ` The organisation has already been shown these funders, so do not repeat any of them — find different ones: ${exclude.join('; ')}.` : ''} Return 8 to 10 funders, ranked with the strongest fit first. Search efficiently — you have a limited number of searches, so prioritise local and regional funders over national ones you already know. Return ONLY a raw JSON array with no commentary, no markdown formatting, no code blocks, no backticks and no citation markers. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Funder name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description of what they fund and why this organisation fits", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "grants@example.org"}] Only use a URL you have actually seen in your search results — never guess or construct a funder's web address. Prefer the funder's homepage over a deep link or campaign page that may change.`
+      }]
+    };
+
+    let message = await client.messages.stream(request).finalMessage();
+
+    // Server-side search can pause the turn part-way through; resume it.
+    let resumes = 0;
+    while (message.stop_reason === 'pause_turn' && resumes < 3) {
+      request.messages = request.messages.concat([{ role: 'assistant', content: message.content }]);
+      message = await client.messages.stream(request).finalMessage();
+      resumes++;
+    }
+
+    const usage = message.usage || {};
+    const searches = (usage.server_tool_use && usage.server_tool_use.web_search_requests) || 0;
+    console.log(`🏛️ Deep search: ${searches} searches, ${usage.input_tokens} in, ${usage.output_tokens} out, stop ${message.stop_reason}, ${Math.round((Date.now() - started) / 1000)}s`);
+
+    const grants = parseOrgGrants(textFromResponse(message));
+    const validatedGrants = await validateGrantUrls(grants);
+
+    clearInterval(heartbeat);
+    res.write(JSON.stringify({ type: 'done', grants: validatedGrants }) + '\n');
+    res.end();
+
+  } catch (error) {
+    console.error('Deep search error:', error.message);
+    clearInterval(heartbeat);
+    res.write(JSON.stringify({ type: 'error', error: "The deep search didn't finish. Your quick results above are still here — please try again." }) + '\n');
+    res.end();
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Theo's Fight running securely on http://localhost:${PORT}`);

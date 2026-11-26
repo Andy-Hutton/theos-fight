@@ -96,6 +96,18 @@
   .grant-links a:hover { color:var(--blue); }
   .results-footnote { font-size:0.84rem;color:#5a7a8a;font-style:italic;line-height:1.6;margin-top:8px; }
 
+  /* DEEP SEARCH */
+  .deep-section { display:none;margin-top:40px; }
+  .deep-section.visible { display:block; }
+  .deep-card { background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(42,159,214,0.08);border-left:4px solid #1e3248;padding:32px; }
+  .deep-title { font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;margin-bottom:8px; }
+  .deep-sub { font-size:0.94rem;color:#5a7a8a;font-weight:300;line-height:1.6;margin-bottom:18px; }
+  .deep-warning { background:#fff8e6;border:1.5px solid #f0d48a;border-radius:8px;padding:14px 16px;font-size:0.9rem;color:#7a5c00;line-height:1.6;margin-bottom:22px; }
+  .deep-warning strong { font-weight:700; }
+  .deep-timer { font-size:0.95rem;font-weight:700;color:var(--blue-dark);margin-top:16px;display:none; }
+  .deep-timer.visible { display:block; }
+  .deep-badge { display:inline-block;background:#1e3248;color:#fff;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-left:10px;vertical-align:middle; }
+
   /* FOOTER */
   footer { background:#0d1a26;padding:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;border-top:1px solid rgba(255,255,255,0.05); }
   .footer-logo { font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:rgba(255,255,255,0.6); }
@@ -286,6 +298,28 @@
       <p class="results-footnote">Always check eligibility and deadlines on the funder's own website before applying.</p>
     </section>
 
+    <section class="deep-section" id="deepSection">
+      <div class="deep-card">
+        <h2 class="deep-title">Dig deeper</h2>
+        <p class="deep-sub">This searches the live web for smaller local trusts and checks funders are still open to applications.</p>
+        <div class="deep-warning">
+          ⏳ <strong>This takes around 4–5 minutes. Please don't close this tab</strong> — we'll make a sound and flash the tab title when your results are ready.
+        </div>
+        <button class="btn-search" type="button" id="deepBtn">Run a deep search</button>
+        <div class="deep-timer" id="deepTimer"></div>
+        <div class="msg-error" id="deepError"></div>
+      </div>
+    </section>
+
+    <section class="results-section" id="deepResultsSection">
+      <div class="results-header">
+        <h2 class="results-title">Deep search results<span class="deep-badge">From the live web</span></h2>
+        <span class="results-count" id="deepResultsCount"></span>
+      </div>
+      <div id="deepResultsList"></div>
+      <p class="results-footnote">Always check eligibility and deadlines on the funder's own website before applying.</p>
+    </section>
+
   </div>
 </main>
 
@@ -320,6 +354,9 @@
     });
   }
 
+  var lastPayload = null;
+  var shownGrantNames = [];
+
   function val(id) { return document.getElementById(id).value.trim(); }
 
   function showError(text) {
@@ -338,8 +375,8 @@
     return /^https?:\/\//i.test(clean) ? clean : '';
   }
 
-  function renderGrants(grants) {
-    resultsList.innerHTML = '';
+  function renderGrants(grants, target) {
+    target.innerHTML = '';
     grants.forEach(function(grant) {
       var card = document.createElement('div');
       card.className = 'grant-card';
@@ -372,7 +409,7 @@
       html += '</div>';
 
       card.innerHTML = html;
-      resultsList.appendChild(card);
+      target.appendChild(card);
     });
   }
 
@@ -431,10 +468,13 @@
       loadingCard.classList.remove('visible');
       searchBtn.disabled = false;
       if (data.success && Array.isArray(data.grants) && data.grants.length) {
-        renderGrants(data.grants);
+        renderGrants(data.grants, resultsList);
         resultsCount.textContent = data.grants.length + (data.grants.length === 1 ? ' grant' : ' grants');
         resultsSection.classList.add('visible');
         resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        lastPayload = payload;
+        shownGrantNames = data.grants.map(function(g) { return g.name; });
+        document.getElementById('deepSection').classList.add('visible');
         return;
       }
       showError((data && data.error) || 'Search failed. Please try again.');
@@ -444,6 +484,164 @@
       searchBtn.disabled = false;
       showError('Search failed. Please try again.');
     });
+  });
+
+  /* DEEP SEARCH */
+  var deepBtn = document.getElementById('deepBtn');
+  var deepTimer = document.getElementById('deepTimer');
+  var deepError = document.getElementById('deepError');
+  var deepResultsSection = document.getElementById('deepResultsSection');
+  var deepResultsList = document.getElementById('deepResultsList');
+  var deepResultsCount = document.getElementById('deepResultsCount');
+  var pageTitle = document.title;
+  var tickHandle = null;
+  var flashHandle = null;
+
+  function startTicking() {
+    var startedAt = Date.now();
+    deepTimer.classList.add('visible');
+    function paint() {
+      var secs = Math.round((Date.now() - startedAt) / 1000);
+      var mins = Math.floor(secs / 60);
+      var rem = secs % 60;
+      deepTimer.textContent = 'Searching the web for funders… ' + mins + 'm ' + (rem < 10 ? '0' : '') + rem + 's — please keep this tab open.';
+    }
+    paint();
+    tickHandle = setInterval(paint, 1000);
+  }
+
+  function stopTicking() {
+    if (tickHandle) { clearInterval(tickHandle); tickHandle = null; }
+    deepTimer.classList.remove('visible');
+  }
+
+  function chime() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      var ctx = new Ctx();
+      [880, 1175].forEach(function(freq, i) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var at = ctx.currentTime + i * 0.18;
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, at);
+        gain.gain.exponentialRampToValueAtTime(0.22, at + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(at);
+        osc.stop(at + 0.55);
+      });
+    } catch (err) {
+      // no sound available — the tab title still flashes
+    }
+  }
+
+  function startFlashing() {
+    if (!document.hidden || flashHandle) return;
+    var on = false;
+    flashHandle = setInterval(function() {
+      document.title = on ? pageTitle : '✅ Results ready';
+      on = !on;
+    }, 1000);
+  }
+
+  function stopFlashing() {
+    if (flashHandle) { clearInterval(flashHandle); flashHandle = null; }
+    document.title = pageTitle;
+  }
+
+  document.addEventListener('visibilitychange', function() { if (!document.hidden) stopFlashing(); });
+  window.addEventListener('focus', stopFlashing);
+
+  function showDeepError(text) {
+    deepError.textContent = text;
+    deepError.classList.add('visible');
+  }
+
+  deepBtn.addEventListener('click', async function() {
+    if (!lastPayload) return;
+    deepError.classList.remove('visible');
+    deepResultsSection.classList.remove('visible');
+    deepBtn.disabled = true;
+    startTicking();
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'org_deep_search', { region: lastPayload.region });
+    }
+
+    var body = {};
+    Object.keys(lastPayload).forEach(function(k) { body[k] = lastPayload[k]; });
+    body.exclude = shownGrantNames;
+
+    try {
+      var res = await fetch('/organisation-grants/deep-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      if (res.status === 401) { window.location.reload(); return; }
+
+      if (!res.ok) {
+        var errData = await res.json().catch(function() { return {}; });
+        stopTicking();
+        deepBtn.disabled = false;
+        showDeepError(errData.error || 'The deep search could not be started. Please try again.');
+        return;
+      }
+
+      var reader = res.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+      var settled = false;
+
+      while (true) {
+        var chunk = await reader.read();
+        if (chunk.done) break;
+        buffer += decoder.decode(chunk.value, { stream: true });
+
+        var cut;
+        while ((cut = buffer.indexOf('\n')) !== -1) {
+          var line = buffer.slice(0, cut).trim();
+          buffer = buffer.slice(cut + 1);
+          if (!line) continue;
+
+          var msg;
+          try { msg = JSON.parse(line); } catch (err) { continue; }
+
+          if (msg.type === 'done' && Array.isArray(msg.grants) && msg.grants.length) {
+            settled = true;
+            renderGrants(msg.grants, deepResultsList);
+            deepResultsCount.textContent = msg.grants.length + (msg.grants.length === 1 ? ' grant' : ' grants');
+            deepResultsSection.classList.add('visible');
+            stopTicking();
+            deepBtn.disabled = false;
+            chime();
+            startFlashing();
+            deepResultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else if (msg.type === 'error') {
+            settled = true;
+            stopTicking();
+            deepBtn.disabled = false;
+            showDeepError(msg.error || "The deep search didn't finish. Your quick results above are still here — please try again.");
+          }
+        }
+      }
+
+      if (!settled) {
+        stopTicking();
+        deepBtn.disabled = false;
+        showDeepError("The deep search didn't finish. Your quick results above are still here — please try again.");
+      }
+
+    } catch (err) {
+      stopTicking();
+      deepBtn.disabled = false;
+      showDeepError("The deep search didn't finish. Your quick results above are still here — please try again.");
+    }
   });
 </script>
 </body>
