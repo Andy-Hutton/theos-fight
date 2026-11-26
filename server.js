@@ -334,10 +334,27 @@ function orgAuth(req, res, next) {
 }
 
 function parseOrgGrants(text) {
-  const start = text.indexOf('[');
   const end = text.lastIndexOf(']');
-  if (start === -1 || end === -1) throw new Error('No JSON array in response');
-  return JSON.parse(text.slice(start, end + 1));
+  if (end === -1) throw new Error('No JSON array in response');
+  // Try each opening bracket in turn — any prose before the array can contain
+  // brackets of its own, so the first bracket is not always the right one.
+  let start = -1;
+  while ((start = text.indexOf('[', start + 1)) !== -1 && start < end) {
+    try {
+      const parsed = JSON.parse(text.slice(start, end + 1));
+      if (Array.isArray(parsed)) return parsed;
+    } catch (err) {
+      // not the start of the array — keep looking
+    }
+  }
+  throw new Error('No JSON array in response');
+}
+
+function textFromResponse(response) {
+  return response.content
+    .filter(block => block.type === 'text')
+    .map(block => block.text)
+    .join('\n');
 }
 
 app.get('/organisation-grants', (req, res) => {
@@ -432,17 +449,22 @@ app.post('/organisation-grants/search', orgSearchLimiter, orgAuth, async (req, r
   }
 
   try {
-    const message = await client.messages.create({
+    // Streamed, not a plain create: a long answer keeps the connection idle
+    // long enough to be dropped part-way through.
+    const message = await client.messages.stream({
       model: 'claude-sonnet-5',
-      max_tokens: 2000,
+      max_tokens: 6000,
       thinking: { type: 'disabled' },
       messages: [{
         role: 'user',
-        content: `You are a UK grant specialist helping organisations that support children with additional needs find grant funding. Search for real UK grant funders this organisation is genuinely eligible to apply to. Organisation: ${orgName}. Legal structure: ${orgType}. Charity number: ${charityNumber || 'Not provided'}. Nation or region: ${region}. Town, city or borough: ${town}. People supported each year: ${beneficiaries}. Annual turnover: ${turnover || 'Not provided'}. Staff: ${staff}. Amount sought: ${amount}. What the grant would fund: ${fundingFor.join(', ')}. In their own words: ${detail}. IMPORTANT: eligibility depends heavily on legal structure and geography — only return funders this legal structure can actually apply to, that fund this region, and whose award sizes fit the amount sought. Include relevant local community foundations and devolved-nation funders where they apply. Return ONLY a raw JSON array with no markdown formatting, no code blocks, no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Funder name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description of what they fund and why this organisation fits", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "grants@example.org"}] Only use stable homepage or main section URLs for reputable UK funders. Never use deep links or specific campaign pages that may change.`
+        content: `You are a UK grant specialist helping organisations that support children with additional needs find grant funding. Find real UK grant funders this organisation is genuinely eligible to apply to. Organisation: ${orgName}. Legal structure: ${orgType}. Charity number: ${charityNumber || 'Not provided'}. Nation or region: ${region}. Town, city or borough: ${town}. People supported each year: ${beneficiaries}. Annual turnover: ${turnover || 'Not provided'}. Staff: ${staff}. Amount sought: ${amount}. What the grant would fund: ${fundingFor.join(', ')}. In their own words: ${detail}. IMPORTANT: eligibility depends heavily on legal structure and geography — only return funders this legal structure can actually apply to, that fund this region, and whose award sizes fit the amount sought. Go beyond the obvious national funders: include smaller regional trusts, local community foundations covering ${town} and ${region}, and devolved-nation funders where they apply. Return 15 to 20 funders, ranked with the strongest fit first. Return ONLY a raw JSON array with no commentary, no markdown formatting, no code blocks and no backticks. Just the pure JSON array like this: [{"name": "Grant name", "organisation": "Funder name", "amount": "Up to X000", "eligibility": 85, "description": "2-3 sentence description of what they fund and why this organisation fits", "tags": ["tag1", "tag2"], "url": "https://real-url.org", "email": "grants@example.org"}] Only use stable homepage or main section URLs for reputable UK funders. Never use deep links or specific campaign pages that may change.`
       }]
-    });
+    }).finalMessage();
 
-    const grants = parseOrgGrants(message.content[0].text);
+    const usage = message.usage || {};
+    console.log(`🏛️ Org search: ${usage.input_tokens} in, ${usage.output_tokens} out, stop ${message.stop_reason}`);
+
+    const grants = parseOrgGrants(textFromResponse(message));
     const validatedGrants = await validateGrantUrls(grants);
     res.json({ success: true, grants: validatedGrants });
 
